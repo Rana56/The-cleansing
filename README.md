@@ -1,2 +1,4 @@
 # The-cleansing.Team-Project
-Repository to upload and update game code
+Welcome to the game project headquarters.
+
+
