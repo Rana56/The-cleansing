@@ -1,2 +1,2 @@
 # The-cleansing.Team-Project
-Repository to send and update game code
+Repository to upload and update game code
