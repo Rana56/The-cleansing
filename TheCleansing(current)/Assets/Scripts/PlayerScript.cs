@@ -1,19 +1,23 @@
 using Mirror;
+using TheCleansing.Combat;
 using UnityEngine;
-namespace QuickStart
+
+namespace TheCleansing
 {
     public class PlayerScript : NetworkBehaviour
     {
         public TextMesh playerNameText;
         public GameObject floatingInfo;
         private Material playerMaterialClone;
-        private SceneScript sceneScript;
+        private BattleUI battleUI;
+        private BattleSystem battle;
         private int health = 200;
 
         [SyncVar(hook = nameof(OnNameChanged))]
         public string playerName;
         [SyncVar(hook = nameof(OnColorChanged))]
         public Color playerColor = Color.white;
+
         void OnNameChanged(string _Old, string _New)
         {
             playerNameText.text = playerName;
@@ -37,21 +41,31 @@ namespace QuickStart
             Color color = new Color(Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f));
             CmdSetupPlayer(name, color);
 
-            sceneScript.playerScript = this;
+            battleUI.playerScript = this;
         }
         void Awake()
         {
             //allow all players to run this
-            sceneScript = GameObject.FindObjectOfType<SceneScript>();
+            battleUI = GameObject.FindObjectOfType<BattleUI>();
+            battle = GameObject.FindObjectOfType<BattleSystem>();
         }
 
         [Command]
         public void CmdSendPlayerMessage()
         {
-            if (sceneScript)
+            if (battleUI)
                 //sceneScript.statusText = $"{playerName} says hello {Random.Range(10, 99)}";
                 health -= 10;
-                sceneScript.statusText = $"Player Health: {health}/200";
+                battleUI.setEnemyText($"Enemy Health: {health}/200");
+                //battleUI.enemyStatusText = $"Enemy Health: {health}/200";
+        }
+
+        
+        [Command]
+        public void CmdUpdateEnemyHealth()
+        {
+            battle.OnPlayerAttackButton();
+            battleUI.setEnemyText($"Enemy Health: {battle.getEnemyUnit().getHp()}/200");
         }
 
         [Command]
@@ -60,8 +74,14 @@ namespace QuickStart
             // player info sent to server, then server updates sync vars which handles it on all clients
             playerName = _name;
             playerColor = _col;
-            sceneScript.statusText = $"{playerName} joined.";
+
+            if (isLocalPlayer)
+            {
+                battleUI.setPlayerText($"Player Health: {this.GetComponent<Health>().getHp()}/200");
+            }
+            //battleUI.setEnemyText($"{playerName} joined.");
         }
+
         void Update()
         {
             if (!isLocalPlayer) {
@@ -69,13 +89,6 @@ namespace QuickStart
                 floatingInfo.transform.LookAt(Camera.main.transform);
                 return; 
             }
-
-            /*  // This is the movements of the characters
-            float moveX = Input.GetAxis("Horizontal") * Time.deltaTime * 110.0f;
-            float moveZ = Input.GetAxis("Vertical") * Time.deltaTime * 4f;
-            transform.Rotate(0, moveX, 0);
-            transform.Translate(0, 0, moveZ);
-            */
         }
     }
 }
