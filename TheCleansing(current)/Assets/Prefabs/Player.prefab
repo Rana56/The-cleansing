@@ -308,7 +308,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a919d9857e1ae543868cb23530e6fcf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
   unitName: Player
   damage: 5
-  maxHP: 100
-  currentHP: 100
+  maxHP: 200
+  currentHP: 200

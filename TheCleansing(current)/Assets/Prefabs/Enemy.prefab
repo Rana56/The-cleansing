@@ -160,10 +160,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a919d9857e1ae543868cb23530e6fcf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
   unitName: Zombie
   damage: 10
   maxHP: 200
-  currentHP: 300
+  currentHP: 200
 --- !u!1 &4073456878025247969
 GameObject:
   m_ObjectHideFlags: 0
