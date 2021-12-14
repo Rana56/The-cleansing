@@ -64,7 +64,7 @@ namespace TheCleansing.Combat
                 {
                     //AttackPlayer();
                     enemyTurn = false;
-                    Thread.Sleep(2);
+                    
                 }
             }
         }

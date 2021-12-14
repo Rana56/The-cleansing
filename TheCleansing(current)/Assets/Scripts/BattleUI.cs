@@ -1,4 +1,5 @@
 using Mirror;
+using System.Threading;
 using TheCleansing.Combat;
 using UnityEngine;
 using UnityEngine.UI;
@@ -41,6 +42,7 @@ namespace TheCleansing
         {
             if (playerScript != null)
                 playerScript.CmdUpdateEnemyHealth();
+                Thread.Sleep(1000);
                 playerScript.CmdUpdatePlayerHealth();
         }
 
