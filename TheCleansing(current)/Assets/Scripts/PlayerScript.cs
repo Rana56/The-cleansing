@@ -93,7 +93,7 @@ namespace TheCleansing
             playerName = _name;
             playerColor = _col;
 
-            battleUI.setPlayerText($"{playerName} Health: {this.GetComponent<Health>().getHp()}/200");
+            battleUI.setPlayerText($"Player Health: {this.GetComponent<Health>().getHp()}/200");
             /**
             if (isLocalPlayer)
             {
