@@ -32,7 +32,7 @@ namespace TheCleansing
         public override void OnStartLocalPlayer()
         {
             Camera.main.transform.SetParent(transform);
-            Camera.main.transform.localPosition = new Vector3(0, 2, -10);
+            Camera.main.transform.localPosition = new Vector3(1, 1, -4);
 
             floatingInfo.transform.localPosition = new Vector3(0, -0.3f, 0.6f);
             floatingInfo.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
