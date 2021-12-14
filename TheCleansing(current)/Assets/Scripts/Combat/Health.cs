@@ -23,6 +23,7 @@ namespace TheCleansing.Combat
 
             if (currentHP <= 0)
             {
+                currentHP = 0;
                 return true;
             }
             else

@@ -50,6 +50,17 @@ namespace TheCleansing
             battle = GameObject.FindObjectOfType<BattleSystem>();
         }
 
+        public void TakeDamge()
+        {
+            var atatckdmg = Random.Range(0, 10);
+            Debug.Log(atatckdmg);
+            var isDead = this.GetComponent<Health>().TakeDamge(atatckdmg);               //attacks a random player
+            if (isDead)
+            {
+                battle.PlayerKilledPopup();
+            }
+        }
+
         [Command]
         public void CmdSendPlayerMessage()
         {
@@ -59,13 +70,20 @@ namespace TheCleansing
                 battleUI.setEnemyText($"Enemy Health: {health}/200");
                 //battleUI.enemyStatusText = $"Enemy Health: {health}/200";
         }
-
         
         [Command]
         public void CmdUpdateEnemyHealth()
         {
             battle.OnPlayerAttackButton();
             battleUI.setEnemyText($"Enemy Health: {battle.getEnemyUnit().getHp()}/200");
+        }
+
+        
+        [Command]
+        public void CmdUpdatePlayerHealth()
+        {
+            TakeDamge();
+            battleUI.setPlayerText($"Player Health: {this.GetComponent<Health>().getHp()}/200");
         }
 
         [Command]
@@ -75,10 +93,12 @@ namespace TheCleansing
             playerName = _name;
             playerColor = _col;
 
+            battleUI.setPlayerText($"{playerName} Health: {this.GetComponent<Health>().getHp()}/200");
+            /**
             if (isLocalPlayer)
             {
                 battleUI.setPlayerText($"Player Health: {this.GetComponent<Health>().getHp()}/200");
-            }
+            }**/
             //battleUI.setEnemyText($"{playerName} joined.");
         }
 

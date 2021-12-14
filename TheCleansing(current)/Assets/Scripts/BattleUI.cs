@@ -40,9 +40,8 @@ namespace TheCleansing
         public void AttackEnemy()           //attack button
         {
             if (playerScript != null)
-                //battle.OnPlayerAttackButton();
-                //playerScript.CmdSendPlayerMessage();
                 playerScript.CmdUpdateEnemyHealth();
+                playerScript.CmdUpdatePlayerHealth();
         }
 
         public void PassTurn()          //pass button
