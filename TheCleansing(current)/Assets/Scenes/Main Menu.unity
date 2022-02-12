@@ -192,7 +192,7 @@ MonoBehaviour:
     serializedVersion: 2
     rgba: 4278190335
   m_fontColor: {r: 1, g: 0, b: 0, a: 1}
-  m_enableVertexGradient: 0
+  m_enableVertexGradient: 1
   m_colorMode: 3
   m_fontColorGradient:
     topLeft: {r: 1, g: 1, b: 1, a: 1}
@@ -710,7 +710,7 @@ MonoBehaviour:
   runInBackground: 1
   autoStartServerBuild: 1
   serverTickRate: 30
-  offlineScene: Assets/Scenes/Main Menu.unity
+  offlineScene: Assets/Scenes/SplashScreen.unity
   onlineScene: Assets/Scenes/Main Menu.unity
   transport: {fileID: 355447520}
   networkAddress: localhost
@@ -721,8 +721,8 @@ MonoBehaviour:
   playerSpawnMethod: 0
   spawnPrefabs: []
   minPlayers: 2
-  menuScene: 
-  roomPlayerPrefab: {fileID: 0}
+  menuScene: Assets/Scenes/Main Menu.unity
+  roomPlayerPrefab: {fileID: 1422165363520005452, guid: 74600c678f4120343be216eb6e2f6bc6, type: 3}
   playerSpawnSystem: {fileID: 0}
 --- !u!4 &355447522
 Transform:
@@ -823,22 +823,10 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1351296779}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
-      - m_Target: {fileID: 1752578088}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
+      - m_Target: {fileID: 507142682}
+        m_TargetAssemblyTypeName: TheCleansing.Lobby.MainMenu, Assembly-CSharp
+        m_MethodName: hostLobby
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -3038,6 +3026,50 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1395141122}
   m_CullTransparentMesh: 1
+--- !u!1 &1508852229
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1508852231}
+  - component: {fileID: 1508852230}
+  m_Layer: 0
+  m_Name: SplashScreen
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1508852230
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1508852229}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b986b7a013dcf04ca28b6e38710e59f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &1508852231
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1508852229}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 827.3279, y: 485.23257, z: -11.431847}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1512759801
 GameObject:
   m_ObjectHideFlags: 0
@@ -3175,8 +3207,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 24, y: -0.000011444092}
-  m_SizeDelta: {x: 663.9014, y: 421.7401}
+  m_AnchoredPosition: {x: 0.000011444092, y: -20}
+  m_SizeDelta: {x: 729.9101, y: 407.5954}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1523890193
 MonoBehaviour:
@@ -4722,8 +4754,8 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1791257418}
         m_TargetAssemblyTypeName: TheCleansing.Lobby.PlayerNameInput, Assembly-CSharp
-        m_MethodName: SetPlayerName
-        m_Mode: 5
+        m_MethodName: SavePlayerName
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine

@@ -122,9 +122,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 7518482034032058744}
         m_TargetAssemblyTypeName: The_cleansing.Lobby.NetworkRoomPlayerLobby, Assembly-CSharp
-        m_MethodName: CmdStartGame
+        m_MethodName: 
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1801,6 +1801,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7049046906578717825}
   - component: {fileID: 4011318032467123987}
+  - component: {fileID: 7957619314739591232}
   m_Layer: 0
   m_Name: NetworkRoomPlayer
   m_TagString: Untagged
@@ -1841,6 +1842,34 @@ MonoBehaviour:
   visible: 0
   m_AssetId: a85513463130c9540bc57551fc862703
   hasSpawned: 0
+--- !u!114 &7957619314739591232
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7518482034032058744}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b28d5521040f1d4d862f2a6502dfce6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
+  lobbyUI: {fileID: 0}
+  playerNameTexts:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  playerReadyTexts:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  startGameButton: {fileID: 0}
+  DisplayName: Loading...
+  IsReady: 0
 --- !u!1 &7711855642886991882
 GameObject:
   m_ObjectHideFlags: 0

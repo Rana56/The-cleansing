@@ -15,7 +15,7 @@ public class SplashSequence : MonoBehaviour
 
     IEnumerator ToMainMenu()
     {
-        yield return new WaitForSeconds(5);
+        yield return new WaitForSeconds(2);
         SceneNumber = 1;
         SceneManager.LoadScene(1);
     }
