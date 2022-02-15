@@ -5,7 +5,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace CleansingNew.Lobby
+namespace TheCleansing.Lobby
 {
     public class NetworkManagerCleansingLobby : NetworkManager
     {
@@ -77,12 +77,13 @@ namespace CleansingNew.Lobby
 
                 NetworkRoomPlayerLobby roomPlayerInstance = Instantiate(roomPlayerPrefab);              //spawns prefab
 
-                roomPlayerInstance.IsLeader = isLeader;             //sets person as leader and so will get leader privalages
+                //roomPlayerInstance.IsLeader = isLeader;             //sets person as leader and so will get leader privalages
 
                 NetworkServer.AddPlayerForConnection(conn, roomPlayerInstance.gameObject);              //adds player for connection, assigns network connection to player
             }
         }
 
+        /**
         public override void OnServerDisconnect(NetworkConnection conn)
         {
             if (conn.identity != null)
@@ -124,7 +125,7 @@ namespace CleansingNew.Lobby
         {
             RoomPlayers.Clear();
         }
-        /**
+        
         public void StartGame()                     //when start button is pressed, this functio is run
         {
             if (SceneManager.GetActiveScene().path == menuScene)         //checks is current scene is the menu
@@ -154,7 +155,7 @@ namespace CleansingNew.Lobby
             }
 
             base.ServerChangeScene(newSceneName);       //does the base logic for chaging the scene
-        }**/
+        }
 
         public override void OnServerReady(NetworkConnection conn)      //listens into whether the client is ready on the server
         {
@@ -171,6 +172,7 @@ namespace CleansingNew.Lobby
                 NetworkServer.Spawn(playerSpawnSystemInstance);                 //connection not passed as parameter, so the server owns it
             }                                                                   //all clients has a spawn system and is owned by the server
         }
+        **/
     }
 }
 

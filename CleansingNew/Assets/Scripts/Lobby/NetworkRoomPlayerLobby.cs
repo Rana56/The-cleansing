@@ -4,10 +4,11 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace CleansingNew.Lobby                   //a room player stores the user's name and if they are ready or not
+namespace TheCleansing.Lobby                   //a room player stores the user's name and if they are ready or not
 {
     public class NetworkRoomPlayerLobby : NetworkBehaviour              //script sits on the player when they join and destroyed when they leave, each player has this script
     {
+        /**
         [Header("UI")]
         [SerializeField] private GameObject lobbyUI = null;             //turns the lobby on or off for the player
         [SerializeField] private TMP_Text[] playerNameTexts = new TMP_Text[4];          //used for show player name
@@ -116,7 +117,7 @@ namespace CleansingNew.Lobby                   //a room player stores the user's
 
             Room.NotifyPlayersOfReadyState();               //notifies room status of player's ready up
         }
-        /**
+        
         [Command]
         public void CmdStartGame()
         {
