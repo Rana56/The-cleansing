@@ -324,13 +324,13 @@ MonoBehaviour:
   networkAddress: localhost
   maxConnections: 100
   authenticator: {fileID: 0}
-  playerPrefab: {fileID: 2077710036620436547, guid: 7119f27db71a9b843a8c1be2e9bcbb9e, type: 3}
+  playerPrefab: {fileID: 89757895328066045, guid: a6953eeb221d1e04a82c10085f3197bd, type: 3}
   autoCreatePlayer: 1
   playerSpawnMethod: 0
   spawnPrefabs: []
   minPlayers: 2
   menuScene: Assets/Scenes/Main Menu.unity
-  roomPlayerPrefab: {fileID: 0}
+  roomPlayerPrefab: {fileID: 1740612200797158824, guid: 9480fb11ae8c48643ae868680682e995, type: 3}
   playerSpawnSystem: {fileID: 0}
 --- !u!4 &65615924
 Transform:

@@ -8,7 +8,6 @@ namespace TheCleansing.Lobby                   //a room player stores the user's
 {
     public class NetworkRoomPlayerLobby : NetworkBehaviour              //script sits on the player when they join and destroyed when they leave, each player has this script
     {
-        /**
         [Header("UI")]
         [SerializeField] private GameObject lobbyUI = null;             //turns the lobby on or off for the player
         [SerializeField] private TMP_Text[] playerNameTexts = new TMP_Text[4];          //used for show player name
@@ -26,7 +25,7 @@ namespace TheCleansing.Lobby                   //a room player stores the user's
             set
             {
                 isLeader = value;
-                startGameButton.gameObject.SetActive(value);            //activates the buttonif the leader is true
+                startGameButton.gameObject.SetActive(value);            //activates the button if the leader is true
             }
         }
 
@@ -123,7 +122,7 @@ namespace TheCleansing.Lobby                   //a room player stores the user's
         {
             if (Room.RoomPlayers[0].connectionToClient != connectionToClient) { return; }               //checks if the first person in the room is the leader
 
-            Room.StartGame();
-        }**/
+            //Room.StartGame();
+        }
     }
 }

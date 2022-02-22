@@ -28,11 +28,18 @@ namespace TheCleansing.Lobby
         //public List<NetworkGamePlayerLobby> GamePlayers { get; } = new List<NetworkGamePlayerLobby>();          //stores all the players in the game
 
         //loads all game objects from resources, under the spawnable prefabs. spawnable prefabs are objects the will spawn on the network
-        public override void OnStartServer() => spawnPrefabs = Resources.LoadAll<GameObject>("SpawnablePrefabs").ToList();
+        public override void OnStartServer()
+        {
+            spawnPrefabs.Clear();
+            spawnPrefabs = Resources.LoadAll<GameObject>("SpawnablePrefabs").ToList();
+        }
 
         public override void OnStartClient()
         {
-            var spawnablePrefabs = Resources.LoadAll<GameObject>("SpawnablePrefabs");
+            spawnPrefabs.Clear();
+            var spawnablePrefabs = Resources.LoadAll<GameObject>("SpawnablePrefabs").ToList();
+
+            NetworkClient.ClearSpawners();
 
             foreach (var prefab in spawnablePrefabs)
             {
@@ -77,13 +84,13 @@ namespace TheCleansing.Lobby
 
                 NetworkRoomPlayerLobby roomPlayerInstance = Instantiate(roomPlayerPrefab);              //spawns prefab
 
-                //roomPlayerInstance.IsLeader = isLeader;             //sets person as leader and so will get leader privalages
+                roomPlayerInstance.IsLeader = isLeader;             //sets person as leader and so will get leader privalages
 
                 NetworkServer.AddPlayerForConnection(conn, roomPlayerInstance.gameObject);              //adds player for connection, assigns network connection to player
             }
         }
 
-        /**
+        
         public override void OnServerDisconnect(NetworkConnection conn)
         {
             if (conn.identity != null)
@@ -95,9 +102,9 @@ namespace TheCleansing.Lobby
                 NotifyPlayersOfReadyState();               //notifies other players on the client side
             }
 
-            base.OnServerDisconnect(conn);          //destorys the player for the connection
+            base.OnServerDisconnect(conn);          //destorys the player for the connection, does original method before overrriding
         }
-
+        
         public void NotifyPlayersOfReadyState()
         {
             foreach (var player in RoomPlayers)
@@ -106,6 +113,7 @@ namespace TheCleansing.Lobby
             }
         }
 
+        
         public bool IsReadyToStart()
         {
             if (numPlayers < minPlayers) { return false; }          //if min players not reached, game won't start
@@ -121,11 +129,12 @@ namespace TheCleansing.Lobby
             return true;        //returns true, if it doens't meet the previous if requirements
         }
 
-        public override void OnStopServer()         //called when server is stopped, called for every client
+        public override void OnStopServer()         //called when server is stopped, called for every client - clears list and list is empty when starting new game
         {
             RoomPlayers.Clear();
         }
-        
+
+        /**
         public void StartGame()                     //when start button is pressed, this functio is run
         {
             if (SceneManager.GetActiveScene().path == menuScene)         //checks is current scene is the menu
