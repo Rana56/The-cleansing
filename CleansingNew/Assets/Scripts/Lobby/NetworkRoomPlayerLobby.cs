@@ -122,7 +122,7 @@ namespace TheCleansing.Lobby                   //a room player stores the user's
         {
             if (Room.RoomPlayers[0].connectionToClient != connectionToClient) { return; }               //checks if the first person in the room is the leader
 
-            //Room.StartGame();
+            Room.StartGame();
         }
     }
 }

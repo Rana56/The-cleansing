@@ -17,15 +17,15 @@ namespace TheCleansing.Lobby
                                                                                              //[SerializeField] string menuScene;
 
         [Header("Game")]
-        //[SerializeField] private NetworkGamePlayerLobby gamePlayerPrefab = null;
-        [SerializeField] private GameObject playerSpawnSystem = null;                   //gameobject with the player spawn system
+        [SerializeField] private NetworkGamePlayerLobby gamePlayerPrefab = null;
+        //[SerializeField] private GameObject playerSpawnSystem = null;                   //gameobject with the player spawn system
 
         public static event Action OnClientConnected;
         public static event Action OnClientDisconnected;
         public static event Action<NetworkConnection> OnServerReadied;          //used to know if everyone has connected to the game and is ready to start on the server, include a timeout if someone disconnects
 
         public List<NetworkRoomPlayerLobby> RoomPlayers { get; } = new List<NetworkRoomPlayerLobby>();          //stores all the joined player in a list, so they can all be accessed for functions
-        //public List<NetworkGamePlayerLobby> GamePlayers { get; } = new List<NetworkGamePlayerLobby>();          //stores all the players in the game
+        public List<NetworkGamePlayerLobby> GamePlayers { get; } = new List<NetworkGamePlayerLobby>();          //stores all the players in the game
 
         //loads all game objects from resources, under the spawnable prefabs. spawnable prefabs are objects the will spawn on the network
         public override void OnStartServer()
@@ -134,14 +134,14 @@ namespace TheCleansing.Lobby
             RoomPlayers.Clear();
         }
 
-        /**
+        
         public void StartGame()                     //when start button is pressed, this functio is run
         {
             if (SceneManager.GetActiveScene().path == menuScene)         //checks is current scene is the menu
             {
                 if (!IsReadyToStart()) { return; }                  //checks if everyone is ready
 
-                ServerChangeScene("Main Game");                 //changes scene
+                ServerChangeScene("Map_1");                 //changes scene
             }
         }
 
@@ -166,6 +166,7 @@ namespace TheCleansing.Lobby
             base.ServerChangeScene(newSceneName);       //does the base logic for chaging the scene
         }
 
+        /**
         public override void OnServerReady(NetworkConnection conn)      //listens into whether the client is ready on the server
         {
             base.OnServerReady(conn);
