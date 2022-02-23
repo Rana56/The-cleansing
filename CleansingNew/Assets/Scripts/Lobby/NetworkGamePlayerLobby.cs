@@ -1,8 +1,4 @@
 using Mirror;
-using System;
-using TMPro;
-using UnityEngine;
-using UnityEngine.UI;
 
 namespace TheCleansing.Lobby                   //a room player stores the user's name and if they are ready or not
 {

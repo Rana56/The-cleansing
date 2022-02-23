@@ -18,7 +18,7 @@ namespace TheCleansing.Lobby
 
         [Header("Game")]
         [SerializeField] private NetworkGamePlayerLobby gamePlayerPrefab = null;
-        //[SerializeField] private GameObject playerSpawnSystem = null;                   //gameobject with the player spawn system
+        [SerializeField] private GameObject playerSpawnSystem = null;                   //gameobject with the player spawn system
 
         public static event Action OnClientConnected;
         public static event Action OnClientDisconnected;
@@ -166,23 +166,22 @@ namespace TheCleansing.Lobby
             base.ServerChangeScene(newSceneName);       //does the base logic for chaging the scene
         }
 
-        /**
         public override void OnServerReady(NetworkConnection conn)      //listens into whether the client is ready on the server
         {
             base.OnServerReady(conn);
 
             OnServerReadied?.Invoke(conn);              //onserverReadied event raised
         }
-
+        
         public override void OnServerChangeScene(string newSceneName)               //called on the server, when a scene is completed
         {                                                                           //when the scene is loaded, actions can start on the scene
-            if (newSceneName.StartsWith("Main Game"))
+            if (newSceneName.StartsWith("Map_"))
             {                           //checks if it is one of the levels   
                 GameObject playerSpawnSystemInstance = Instantiate(playerSpawnSystem);              //spwans the player spawn system
                 NetworkServer.Spawn(playerSpawnSystemInstance);                 //connection not passed as parameter, so the server owns it
             }                                                                   //all clients has a spawn system and is owned by the server
         }
-        **/
+        
     }
 }
 
