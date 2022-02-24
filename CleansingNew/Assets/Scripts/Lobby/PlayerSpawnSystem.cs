@@ -39,7 +39,8 @@ namespace TheCleansing.Lobby
             }
 
             GameObject playerInstance = Instantiate(playerPrefab, spawnPoints[nextIndex].position, spawnPoints[nextIndex].rotation);           //spawns in the player, instantiates the prefab, spawns it at the position from spawnPoints facing a certian direction (rotation)
-            NetworkServer.Spawn(playerInstance, conn);          //spwans it for the other clients, connection also passed a parameter to show the connection belongs to the player object that is spawned in - the user has authority over it
+            //NetworkServer.Spawn(playerInstance, conn);          //spwans it for the other clients, connection also passed a parameter to show the connection belongs to the player object that is spawned in - the user has authority over it
+            NetworkServer.AddPlayerForConnection(conn, playerInstance);
 
             nextIndex++;        //increases the index, so when a new player joins they get a new spawn point
         }

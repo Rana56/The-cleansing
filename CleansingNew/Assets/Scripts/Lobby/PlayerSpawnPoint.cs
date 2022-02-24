@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace TheCleansing.Lobby
 {
-    public class PlayerSpawnPoint : MonoBehaviour
+    public class PlayerSpawnPoint : MonoBehaviour                  
     {
         private void Awake()
         {

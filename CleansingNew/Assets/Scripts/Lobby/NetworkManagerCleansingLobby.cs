@@ -159,7 +159,7 @@ namespace TheCleansing.Lobby
                     NetworkServer.Destroy(conn.identity.gameObject);        //destorys their game object for thier current identity, i.e. gets rid of their room player object
 
                     //the connection to the client is now not the object that was destroyed, it is the object that was spawned in
-                    NetworkServer.ReplacePlayerForConnection(conn, gameplayerInstance.gameObject);          //assigns the new game player to connection player insted of the old one
+                    NetworkServer.ReplacePlayerForConnection(conn, gameplayerInstance.gameObject, true);          //assigns the new game player to connection player insted of the old one
                 }
             }
 
@@ -173,7 +173,7 @@ namespace TheCleansing.Lobby
             OnServerReadied?.Invoke(conn);              //onserverReadied event raised
         }
         
-        public override void OnServerChangeScene(string newSceneName)               //called on the server, when a scene is completed
+        public override void OnServerSceneChanged(string newSceneName)               //called on the server, when a scene is completed
         {                                                                           //when the scene is loaded, actions can start on the scene
             if (newSceneName.StartsWith("Map_"))
             {                           //checks if it is one of the levels   
