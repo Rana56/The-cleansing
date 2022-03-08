@@ -279,7 +279,6 @@ namespace Mirror
             }
         }
 
-
         // zigzag encoding https://gist.github.com/mfuerstenau/ba870a29e16536fdbaba
         public static void CompressVarInt(NetworkWriter writer, long i)
         {
@@ -297,7 +296,7 @@ namespace Mirror
             }
 
             byte a1 = reader.ReadByte();
-            if (a0 >= 241 && a0 <= 248)
+            if (a0 <= 248)
             {
                 return 240 + ((a0 - (ulong)241) << 8) + a1;
             }

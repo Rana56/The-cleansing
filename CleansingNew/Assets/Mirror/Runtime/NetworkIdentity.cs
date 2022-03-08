@@ -162,11 +162,6 @@ namespace Mirror
         // get all NetworkBehaviour components
         public NetworkBehaviour[] NetworkBehaviours { get; private set; }
 
-#pragma warning disable 618
-        [Obsolete(NetworkVisibilityObsoleteMessage.Message)]
-        public NetworkVisibility visibility { get; private set; }
-#pragma warning restore 618
-
         // current visibility
         //
         // Default = use interest management
@@ -211,12 +206,12 @@ namespace Mirror
             {
 #if UNITY_EDITOR
                 // This is important because sometimes OnValidate does not run (like when adding view to prefab with no child links)
-                if (string.IsNullOrEmpty(m_AssetId))
+                if (string.IsNullOrWhiteSpace(m_AssetId))
                     SetupIDs();
 #endif
                 // convert string to Guid and use .Empty to avoid exception if
                 // we would use 'new Guid("")'
-                return string.IsNullOrEmpty(m_AssetId) ? Guid.Empty : new Guid(m_AssetId);
+                return string.IsNullOrWhiteSpace(m_AssetId) ? Guid.Empty : new Guid(m_AssetId);
             }
             internal set
             {
@@ -230,14 +225,14 @@ namespace Mirror
                 }
 
                 // new is empty
-                if (string.IsNullOrEmpty(newAssetIdString))
+                if (string.IsNullOrWhiteSpace(newAssetIdString))
                 {
                     Debug.LogError($"Can not set AssetId to empty guid on NetworkIdentity '{name}', old assetId '{oldAssetIdString}'");
                     return;
                 }
 
                 // old not empty
-                if (!string.IsNullOrEmpty(oldAssetIdString))
+                if (!string.IsNullOrWhiteSpace(oldAssetIdString))
                 {
                     Debug.LogError($"Can not Set AssetId on NetworkIdentity '{name}' because it already had an assetId, current assetId '{oldAssetIdString}', attempted new assetId '{newAssetIdString}'");
                     return;
@@ -253,6 +248,16 @@ namespace Mirror
         // Keep track of all sceneIds to detect scene duplicates
         static readonly Dictionary<ulong, NetworkIdentity> sceneIds =
             new Dictionary<ulong, NetworkIdentity>();
+
+        // RuntimeInitializeOnLoadMethod -> fast playmode without domain reload
+        // internal so it can be called from NetworkServer & NetworkClient
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+        internal static void ResetStatics()
+        {
+            nextNetworkId = 1;
+            clientAuthorityCallback = null;
+            previousLocalPlayer = null;
+        }
 
         /// <summary>Gets the NetworkIdentity from the sceneIds dictionary with the corresponding id</summary>
         public static NetworkIdentity GetSceneIdentity(ulong id) => sceneIds[id];
@@ -317,11 +322,6 @@ namespace Mirror
             // => doing it here is the fastest and easiest solution.
             InitializeNetworkBehaviours();
 
-            // initialize visibility component. only call GetComponent once.
-#pragma warning disable 618
-            visibility = GetComponent<NetworkVisibility>();
-#pragma warning restore 618
-
             if (hasSpawned)
             {
                 Debug.LogError($"{name} has already spawned. Don't call Instantiate for NetworkIdentities that were in the scene since the beginning (aka scene objects).  Otherwise the client won't know which object to use for a SpawnSceneObject message.");
@@ -346,7 +346,7 @@ namespace Mirror
         void AssignAssetID(string path)
         {
             // only set if not empty. fixes https://github.com/vis2k/Mirror/issues/2765
-            if (!string.IsNullOrEmpty(path))
+            if (!string.IsNullOrWhiteSpace(path))
                 m_AssetId = AssetDatabase.AssetPathToGUID(path);
         }
 
@@ -834,13 +834,6 @@ namespace Mirror
             }
         }
 
-        // interest management /////////////////////////////////////////////////
-        // obsoletes to still support ProximityChecker while transitioning to
-        // global Interest Management
-        // Deprecated 2021-02-17
-        [Obsolete("Use NetworkServer.RebuildObservers(identity, initialize) instead.")]
-        public void RebuildObservers(bool initialize) => NetworkServer.RebuildObservers(this, initialize);
-
         // vis2k: readstring bug prevention: https://github.com/vis2k/Mirror/issues/2617
         // -> OnSerialize writes length,componentData,length,componentData,...
         // -> OnDeserialize carefully extracts each data, then deserializes each component with separate readers
@@ -1242,6 +1235,8 @@ namespace Mirror
                 if (NetworkClient.localPlayer == this)
                     NetworkClient.localPlayer = null;
             }
+
+            previousLocalPlayer = null;
             isLocalPlayer = false;
         }
 

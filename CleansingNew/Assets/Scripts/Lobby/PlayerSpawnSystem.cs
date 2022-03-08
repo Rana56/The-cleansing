@@ -20,6 +20,7 @@ namespace TheCleansing.Lobby
             spawnPoints = spawnPoints.OrderBy(x => x.GetSiblingIndex()).ToList();           //makes sure the order is correct
         }
 
+
         public static void RemoveSpawnPoint(Transform transform) => spawnPoints.Remove(transform);          //removes spawn point
 
         public override void OnStartServer() => NetworkManagerCleansingLobby.OnServerReadied += SpawnPlayer;         //when this game object starts existing on the server, the object is subscribed to the onserverReadied event

@@ -11,7 +11,7 @@ namespace Mirror
         readonly Dictionary<NetworkIdentity, Guid> lastObjectMatch =
             new Dictionary<NetworkIdentity, Guid>();
 
-        HashSet<Guid> dirtyMatches = new HashSet<Guid>();
+        readonly HashSet<Guid> dirtyMatches = new HashSet<Guid>();
 
         public override void OnSpawned(NetworkIdentity identity)
         {
@@ -43,8 +43,9 @@ namespace Mirror
                 RebuildMatchObservers(currentMatch);
         }
 
+        // internal so we can update from tests
         [ServerCallback]
-        void Update()
+        internal void Update()
         {
             // for each spawned:
             //   if match changed:

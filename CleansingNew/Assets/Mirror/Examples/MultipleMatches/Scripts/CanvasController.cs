@@ -67,6 +67,17 @@ namespace Mirror.Examples.MultipleMatch
         public RoomGUI roomGUI;
         public ToggleGroup toggleGroup;
 
+        // RuntimeInitializeOnLoadMethod -> fast playmode without domain reload
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+        static void ResetStatics()
+        {
+            playerMatches.Clear();
+            openMatches.Clear();
+            matchConnections.Clear();
+            playerInfos.Clear();
+            waitingConnections.Clear();
+        }
+
         #region UI Functions
 
         // Called from several places to ensure a clean reset
@@ -306,9 +317,9 @@ namespace Mirror.Examples.MultipleMatch
             ResetCanvas();
         }
 
-        internal void OnClientConnect(NetworkConnection conn)
+        internal void OnClientConnect()
         {
-            playerInfos.Add(conn, new PlayerInfo { playerIndex = this.playerIndex, ready = false });
+            playerInfos.Add(NetworkClient.connection, new PlayerInfo { playerIndex = this.playerIndex, ready = false });
         }
 
         internal void OnStartClient()

@@ -9,9 +9,10 @@ namespace TheCleansing.Lobby                   //a room player stores the user's
     {
         [Header("UI")]
         [SerializeField] private GameObject lobbyUI = null;             //turns the lobby on or off for the player
-        [SerializeField] private TMP_Text[] playerNameTexts = new TMP_Text[4];          //used for show player name
-        [SerializeField] private TMP_Text[] playerReadyTexts = new TMP_Text[4];         //used to show if players are ready to start
+        [SerializeField] private TMP_Text[] playerNameTexts = new TMP_Text[2];          //used for show player name
+        [SerializeField] private TMP_Text[] playerReadyTexts = new TMP_Text[2];         //used to show if players are ready to start
         [SerializeField] private Button startGameButton = null;                 //shows this button only to the leader, allows them to start game when everyone is ready
+        [SerializeField] private Button readyButton;
 
         [SyncVar(hook = nameof(HandleDisplayNameChanged))]              //variables that can only be changed on the server and is updated everywhere once updated
         public string DisplayName = "Loading...";                   //server changes the names and the logic, it notifies all the other cilents
@@ -21,6 +22,10 @@ namespace TheCleansing.Lobby                   //a room player stores the user's
         private bool isLeader;
         public bool IsLeader                //sets the leader boolean
         {
+            get
+            {
+                return isLeader;
+            }
             set
             {
                 isLeader = value;
@@ -66,7 +71,7 @@ namespace TheCleansing.Lobby                   //a room player stores the user's
         {
             if (!hasAuthority)                  //looks for the player that has authority and updates their display
             {
-                foreach (var player in Room.RoomPlayers)
+                foreach (var player in Room.RoomPlayers)            //checks through objects and sees if the client has authority over it
                 {
                     if (player.hasAuthority)
                     {
@@ -93,6 +98,15 @@ namespace TheCleansing.Lobby                   //a room player stores the user's
                     "<color=green>Ready</color>" :                              //changes color depending if they are ready
                     "<color=red>Not Ready</color>";
             }
+
+            if (IsReady)
+            {
+                readyButton.GetComponentInChildren<Text>().text = "Unready";
+            }
+            else
+            {
+                readyButton.GetComponentInChildren<Text>().text = "Ready";
+            }
         }
 
         public void HandleReadyToStart(bool readyToStart)              //updates ready status
@@ -100,6 +114,30 @@ namespace TheCleansing.Lobby                   //a room player stores the user's
             if (!isLeader) { return; }          //method only applicable to leader
 
             startGameButton.interactable = readyToStart;            //button only interacatble if all players are ready
+        }
+
+        public void QuitLobby()
+        {
+            if (hasAuthority)                   //checks if leader or not, then does appropriate dissconnect
+            {
+                if (IsLeader)
+                {
+                    Room.StopHost();
+                }
+                else
+                {
+                    Room.StopClient();
+                }
+            }
+        }
+
+        private void OnDestroy()            //when lobby player the client has authority over is destroyed, returns user to main menu
+        {
+            if (hasAuthority)
+            {
+                Debug.Log("Lobby player destroyed");
+                MainMenu.instance.ReturnToMainMenu();
+            }
         }
 
         [Command]

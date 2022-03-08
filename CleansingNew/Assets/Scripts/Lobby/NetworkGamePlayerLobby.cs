@@ -1,12 +1,13 @@
 using Mirror;
+using TMPro;
+using UnityEngine;
 
 namespace TheCleansing.Lobby                   //a room player stores the user's name and if they are ready or not
 {
     public class NetworkGamePlayerLobby : NetworkBehaviour              //script sits on the player when they join and destroyed when they leave, each player has this script
     {
-
         [SyncVar]              //sync the vairable across all the clients so that all players knows the correct names in case someone leaves or joins
-        private string displayName = "Loading...";                   //server changes the names and the logic, it notifies all the other cilents
+        public string displayName = "Loading...";               //server changes the names and the logic, it notifies all the other cilents
 
         private NetworkManagerCleansingLobby room;
         private NetworkManagerCleansingLobby Room        //a way to reference room easliy
@@ -30,7 +31,7 @@ namespace TheCleansing.Lobby                   //a room player stores the user's
             Room.GamePlayers.Remove(this);          //removes whoever disconnected
 
         }
-
+        
         [Server]                    //ensures the logic only run on the server
         public void SetDisplayName(string displayName)                      //sets dislpay name
         {

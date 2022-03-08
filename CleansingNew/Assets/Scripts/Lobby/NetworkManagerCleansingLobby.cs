@@ -19,10 +19,12 @@ namespace TheCleansing.Lobby
         [Header("Game")]
         [SerializeField] private NetworkGamePlayerLobby gamePlayerPrefab = null;
         [SerializeField] private GameObject playerSpawnSystem = null;                   //gameobject with the player spawn system
+        [SerializeField] private GameObject battleUI = null;
 
         public static event Action OnClientConnected;
         public static event Action OnClientDisconnected;
         public static event Action<NetworkConnection> OnServerReadied;          //used to know if everyone has connected to the game and is ready to start on the server, include a timeout if someone disconnects
+        //public static event Action OnServerStopped;
 
         public List<NetworkRoomPlayerLobby> RoomPlayers { get; } = new List<NetworkRoomPlayerLobby>();          //stores all the joined player in a list, so they can all be accessed for functions
         public List<NetworkGamePlayerLobby> GamePlayers { get; } = new List<NetworkGamePlayerLobby>();          //stores all the players in the game
@@ -131,7 +133,10 @@ namespace TheCleansing.Lobby
 
         public override void OnStopServer()         //called when server is stopped, called for every client - clears list and list is empty when starting new game
         {
+            //OnServerStopped?.Invoke();          //checks server is stopped before clearing lists
+
             RoomPlayers.Clear();
+            GamePlayers.Clear();
         }
 
         
@@ -157,7 +162,9 @@ namespace TheCleansing.Lobby
                     gameplayerInstance.SetDisplayName(RoomPlayers[i].DisplayName);      //sets the display name, transfers the name from the room to the game player
 
                     NetworkServer.Destroy(conn.identity.gameObject);        //destorys their game object for thier current identity, i.e. gets rid of their room player object
-
+                    
+                    //playerPrefab.GetComponent<NetworkGamePlayerLobby>().CmdSetDisplayName(conn.identity.GetComponent<NetworkGamePlayerLobby>().GetDisplayName());
+                    
                     //the connection to the client is now not the object that was destroyed, it is the object that was spawned in
                     NetworkServer.ReplacePlayerForConnection(conn, gameplayerInstance.gameObject, true);          //assigns the new game player to connection player insted of the old one
                 }
@@ -177,9 +184,12 @@ namespace TheCleansing.Lobby
         {                                                                           //when the scene is loaded, actions can start on the scene
             if (newSceneName.StartsWith("Map_"))
             {                           //checks if it is one of the levels   
-                GameObject playerSpawnSystemInstance = Instantiate(playerSpawnSystem);              //spwans the player spawn system
-                NetworkServer.Spawn(playerSpawnSystemInstance);                 //connection not passed as parameter, so the server owns it
-            }                                                                   //all clients has a spawn system and is owned by the server
+                GameObject playerSpawnSystemInstance = Instantiate(playerSpawnSystem);              //spwans the player spawn system, connection not passed as parameter, so the server owns it
+                NetworkServer.Spawn(playerSpawnSystemInstance);                 //all clients has a spawn system and is owned by the server
+
+                //GameObject battleUI_Instance = Instantiate(battleUI);           //spawns battleUI
+                //NetworkServer.Spawn(battleUI_Instance);
+            }
         }
         
     }
