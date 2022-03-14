@@ -8,7 +8,7 @@ namespace TheCleansing.Lobby
     {
         public static MainMenu instance;
 
-        [SerializeField] private NetworkManagerCleansingLobby networkManager = null;
+        [SerializeField] private NetworkManagerTC networkManager = null;
 
         [Header("UI")]
         [SerializeField] private GameObject landingPagePanel = null;        //ui that turns on and off

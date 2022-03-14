@@ -122,8 +122,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1740612200797158824}
-        m_TargetAssemblyTypeName: TheCleansing.Lobby.NetworkRoomPlayerLobby, Assembly-CSharp
+      - m_Target: {fileID: 806102640192347815}
+        m_TargetAssemblyTypeName: TheCleansing.Lobby.NetworkLobbyPlayer, Assembly-CSharp
         m_MethodName: CmdStartGame
         m_Mode: 1
         m_Arguments:
@@ -606,8 +606,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1740612200797158824}
-        m_TargetAssemblyTypeName: TheCleansing.Lobby.NetworkRoomPlayerLobby, Assembly-CSharp
+      - m_Target: {fileID: 806102640192347815}
+        m_TargetAssemblyTypeName: TheCleansing.Lobby.NetworkLobbyPlayer, Assembly-CSharp
         m_MethodName: QuitLobby
         m_Mode: 1
         m_Arguments:
@@ -1138,8 +1138,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1740612200797158824}
-        m_TargetAssemblyTypeName: TheCleansing.Lobby.NetworkRoomPlayerLobby, Assembly-CSharp
+      - m_Target: {fileID: 806102640192347815}
+        m_TargetAssemblyTypeName: TheCleansing.Lobby.NetworkLobbyPlayer, Assembly-CSharp
         m_MethodName: CmdReadyUp
         m_Mode: 1
         m_Arguments:
@@ -1453,7 +1453,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7049046906578717825}
   - component: {fileID: 4011318032467123987}
-  - component: {fileID: 1740612200797158824}
+  - component: {fileID: 806102640192347815}
   m_Layer: 0
   m_Name: NetworkRoomPlayer
   m_TagString: Untagged
@@ -1494,7 +1494,7 @@ MonoBehaviour:
   visible: 0
   m_AssetId: 9480fb11ae8c48643ae868680682e995
   hasSpawned: 0
---- !u!114 &1740612200797158824
+--- !u!114 &806102640192347815
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1503,7 +1503,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 7518482034032058744}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 511e2ba1b87ce7c49a0c1c16ecbb302f, type: 3}
+  m_Script: {fileID: 11500000, guid: 6f77ccea2ffdad34fb36cb42ccae61ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   syncMode: 0
@@ -1519,6 +1519,8 @@ MonoBehaviour:
   readyButton: {fileID: 1874338356644501244}
   DisplayName: Loading...
   IsReady: 0
+  ConnectionId: 0
+  PlayerNumber: 0
 --- !u!1 &8165078527465125930
 GameObject:
   m_ObjectHideFlags: 0

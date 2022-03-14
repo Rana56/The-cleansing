@@ -5,19 +5,23 @@ using UnityEngine.UI;
 
 namespace TheCleansing.Lobby                   //a room player stores the user's name and if they are ready or not
 {
-    public class NetworkRoomPlayerLobby : NetworkBehaviour              //script sits on the player when they join and destroyed when they leave, each player has this script
+    public class NetworkLobbyPlayer : NetworkBehaviour              //script sits on the player when they join and destroyed when they leave, each player has this script
     {
         [Header("UI")]
         [SerializeField] private GameObject lobbyUI = null;             //turns the lobby on or off for the player
         [SerializeField] private TMP_Text[] playerNameTexts = new TMP_Text[2];          //used for show player name
         [SerializeField] private TMP_Text[] playerReadyTexts = new TMP_Text[2];         //used to show if players are ready to start
         [SerializeField] private Button startGameButton = null;                 //shows this button only to the leader, allows them to start game when everyone is ready
-        [SerializeField] private Button readyButton;
+        [SerializeField] private Button readyButton = null;
 
         [SyncVar(hook = nameof(HandleDisplayNameChanged))]              //variables that can only be changed on the server and is updated everywhere once updated
         public string DisplayName = "Loading...";                   //server changes the names and the logic, it notifies all the other cilents
         [SyncVar(hook = nameof(HandleReadyStatusChanged))]          //hook is the name of the method that is called when function is executed, e.g. when ready is called, this method is called, updated the ui only when the variables are changed
         public bool IsReady = false;
+        [SyncVar]
+        public int ConnectionId;
+        [SyncVar]
+        public int PlayerNumber;
 
         private bool isLeader;
         public bool IsLeader                //sets the leader boolean
@@ -33,13 +37,13 @@ namespace TheCleansing.Lobby                   //a room player stores the user's
             }
         }
 
-        private NetworkManagerCleansingLobby room;
-        private NetworkManagerCleansingLobby Room        //a way to reference room easliy
+        private NetworkManagerTC room;
+        private NetworkManagerTC Room        //a way to reference room easliy
         {
             get
             {
                 if (room != null) { return room; }
-                return room = NetworkManager.singleton as NetworkManagerCleansingLobby;          //casts the networkManager as a networkManagerLobby
+                return room = NetworkManager.singleton as NetworkManagerTC;          //casts the networkManager as a networkManagerLobby
             }
         }
 
@@ -62,6 +66,12 @@ namespace TheCleansing.Lobby                   //a room player stores the user's
             Room.RoomPlayers.Remove(this);          //removes whoever disconnected
 
             UpdateDisplay();
+
+            if (hasAuthority)
+            {
+                Debug.Log("Lobby player destroyed");
+               // MainMenu.instance.ReturnToMainMenu();               //TODO: need to fix this
+            }
         }
 
         public void HandleReadyStatusChanged(bool oldValue, bool newValue) => UpdateDisplay();
@@ -118,25 +128,23 @@ namespace TheCleansing.Lobby                   //a room player stores the user's
 
         public void QuitLobby()
         {
-            if (hasAuthority)                   //checks if leader or not, then does appropriate dissconnect
+            //checks if leader or not, then does appropriate dissconnect
+            if (IsLeader)
             {
-                if (IsLeader)
-                {
-                    Room.StopHost();
-                }
-                else
-                {
-                    Room.StopClient();
-                }
+                Room.StopHost();
+            }
+            else
+            {
+                Room.StopClient();
             }
         }
 
-        private void OnDestroy()            //when lobby player the client has authority over is destroyed, returns user to main menu
+        private void OnClientDisconnect()            //when lobby player the client has authority over is destroyed, returns user to main menu
         {
             if (hasAuthority)
             {
                 Debug.Log("Lobby player destroyed");
-                MainMenu.instance.ReturnToMainMenu();
+                MainMenu.instance.ReturnToMainMenu();               //TODO: need to fix this
             }
         }
 

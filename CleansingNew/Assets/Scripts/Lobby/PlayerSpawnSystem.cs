@@ -8,7 +8,6 @@ namespace TheCleansing.Lobby
     public class PlayerSpawnSystem : NetworkBehaviour                   //spawn system created by the server, when spawning to a scene a game object with this scripte will be spawned
     {
         [SerializeField] private GameObject playerPrefab = null;        //the prefab that will spawn, assigned to a connection
-
         private static List<Transform> spawnPoints = new List<Transform>();         //stores the posisitions in the scene, transform - position, rotation, scale
 
         private int nextIndex = 0;          //when player spawns in, this allows the server to know where to spawn next player
@@ -23,10 +22,10 @@ namespace TheCleansing.Lobby
 
         public static void RemoveSpawnPoint(Transform transform) => spawnPoints.Remove(transform);          //removes spawn point
 
-        public override void OnStartServer() => NetworkManagerCleansingLobby.OnServerReadied += SpawnPlayer;         //when this game object starts existing on the server, the object is subscribed to the onserverReadied event
+        public override void OnStartServer() => NetworkManagerTC.OnServerReadied += SpawnPlayer;         //when this game object starts existing on the server, the object is subscribed to the onserverReadied event
 
         [ServerCallback]
-        private void OnDestroy() => NetworkManagerCleansingLobby.OnServerReadied -= SpawnPlayer;             //when the object is destroyed, it is unsubscribed from the event
+        private void OnDestroy() => NetworkManagerTC.OnServerReadied -= SpawnPlayer;             //when the object is destroyed, it is unsubscribed from the event
 
         [Server]
         public void SpawnPlayer(NetworkConnection conn)             //takes the connection of player as a parameter
@@ -40,6 +39,7 @@ namespace TheCleansing.Lobby
             }
 
             GameObject playerInstance = Instantiate(playerPrefab, spawnPoints[nextIndex].position, spawnPoints[nextIndex].rotation);           //spawns in the player, instantiates the prefab, spawns it at the position from spawnPoints facing a certian direction (rotation)
+            
             //NetworkServer.Spawn(playerInstance, conn);          //spwans it for the other clients, connection also passed a parameter to show the connection belongs to the player object that is spawned in - the user has authority over it
             NetworkServer.AddPlayerForConnection(conn, playerInstance);
 

@@ -198,10 +198,9 @@ MonoBehaviour:
   spawnPrefabs: []
   minPlayers: 2
   menuScene: Assets/Scenes/Main Menu.unity
-  roomPlayerPrefab: {fileID: 1740612200797158824, guid: 9480fb11ae8c48643ae868680682e995, type: 3}
+  roomPlayerPrefab: {fileID: 806102640192347815, guid: 9480fb11ae8c48643ae868680682e995, type: 3}
   gamePlayerPrefab: {fileID: 4979015387944167800, guid: 42f08f2af968d8c4ebc2528d08644e73, type: 3}
   playerSpawnSystem: {fileID: 7295120535465887925, guid: cf096b1103e71a14596296d0a2111dbc, type: 3}
-  battleUI: {fileID: 1347215326762590758, guid: 9481e2b87b91da040aa9cfecf47a99dd, type: 3}
 --- !u!4 &65615924
 Transform:
   m_ObjectHideFlags: 0
@@ -462,32 +461,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1062664431 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 194161613140891735, guid: 499926444710d494bba87755fceb9696, type: 3}
-  m_PrefabInstance: {fileID: 194161611851674197}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &1141370968 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 194161613298456861, guid: 499926444710d494bba87755fceb9696, type: 3}
-  m_PrefabInstance: {fileID: 194161611851674197}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &1701511998 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 194161612397449534, guid: 499926444710d494bba87755fceb9696, type: 3}
-  m_PrefabInstance: {fileID: 194161611851674197}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1762361903 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 194161611883532361, guid: 499926444710d494bba87755fceb9696, type: 3}
-  m_PrefabInstance: {fileID: 194161611851674197}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0bff2d6c400af134f9c9e5415e3367f1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &194161611851674197
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -495,46 +468,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 194161611710418457, guid: 499926444710d494bba87755fceb9696, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 194161611710418457, guid: 499926444710d494bba87755fceb9696, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 194161611710418457, guid: 499926444710d494bba87755fceb9696, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 1762361903}
-    - target: {fileID: 194161611710418457, guid: 499926444710d494bba87755fceb9696, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 194161611710418457, guid: 499926444710d494bba87755fceb9696, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: Exit
-      objectReference: {fileID: 0}
-    - target: {fileID: 194161611710418457, guid: 499926444710d494bba87755fceb9696, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: TheCleansing.Lobby.MainMenu, Assembly-CSharp
-      objectReference: {fileID: 0}
-    - target: {fileID: 194161611710418457, guid: 499926444710d494bba87755fceb9696, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
-      value: UnityEngine.Object, UnityEngine
-      objectReference: {fileID: 0}
-    - target: {fileID: 194161611883532361, guid: 499926444710d494bba87755fceb9696, type: 3}
-      propertyPath: IpPanel
-      value: 
-      objectReference: {fileID: 1701511998}
-    - target: {fileID: 194161611883532361, guid: 499926444710d494bba87755fceb9696, type: 3}
-      propertyPath: namePanel
-      value: 
-      objectReference: {fileID: 1141370968}
-    - target: {fileID: 194161611883532361, guid: 499926444710d494bba87755fceb9696, type: 3}
-      propertyPath: panelInfoPage
-      value: 
-      objectReference: {fileID: 1062664431}
     - target: {fileID: 194161611883532361, guid: 499926444710d494bba87755fceb9696, type: 3}
       propertyPath: networkManager
       value: 

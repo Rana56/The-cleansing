@@ -874,6 +874,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
+  battleUI: {fileID: 1347215326762590758}
   playerNameTexts:
   - {fileID: 1347215326473319406}
   - {fileID: 1347215326717358294}

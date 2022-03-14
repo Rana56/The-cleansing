@@ -6,7 +6,7 @@ namespace TheCleansing.Lobby
 {
     public class JoinLobbyMenu : MonoBehaviour              //script allows user to join with IP
     {
-        [SerializeField] private NetworkManagerCleansingLobby networkManager = null;
+        [SerializeField] private NetworkManagerTC networkManager = null;
 
         [Header("UI")]
         [SerializeField] private GameObject landingPagePanel = null;
@@ -15,14 +15,14 @@ namespace TheCleansing.Lobby
 
         private void OnEnable()             //checks if client is connected or disconnected
         {
-            NetworkManagerCleansingLobby.OnClientConnected += HandleClientConnected;
-            NetworkManagerCleansingLobby.OnClientDisconnected += HandleClientDisconnected;
+            NetworkManagerTC.OnClientConnected += HandleClientConnected;
+            NetworkManagerTC.OnClientDisconnected += HandleClientDisconnected;
         }
 
         private void OnDisable()
         {
-            NetworkManagerCleansingLobby.OnClientConnected -= HandleClientConnected;
-            NetworkManagerCleansingLobby.OnClientDisconnected -= HandleClientDisconnected;
+            NetworkManagerTC.OnClientConnected -= HandleClientConnected;
+            NetworkManagerTC.OnClientDisconnected -= HandleClientDisconnected;
         }
 
         public void JoinLobby()

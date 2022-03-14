@@ -7,27 +7,27 @@ using UnityEngine.SceneManagement;
 
 namespace TheCleansing.Lobby
 {
-    public class NetworkManagerCleansingLobby : NetworkManager
+    public class NetworkManagerTC : NetworkManager
     {
         [SerializeField] private int minPlayers = 2;                        //minimum players needed to start game
         [Scene] [SerializeField] private string menuScene = string.Empty;       //scene reference
 
         [Header("Room")]
-        [SerializeField] private NetworkRoomPlayerLobby roomPlayerPrefab = null;             //reference to network room player
+        [SerializeField] private NetworkLobbyPlayer roomPlayerPrefab = null;             //reference to network room player
                                                                                              //[SerializeField] string menuScene;
 
         [Header("Game")]
-        [SerializeField] private NetworkGamePlayerLobby gamePlayerPrefab = null;
+        [SerializeField] private NetworkGamePlayer gamePlayerPrefab = null;
         [SerializeField] private GameObject playerSpawnSystem = null;                   //gameobject with the player spawn system
-        [SerializeField] private GameObject battleUI = null;
+        //[SerializeField] private GameObject battleUI = null;
 
         public static event Action OnClientConnected;
         public static event Action OnClientDisconnected;
         public static event Action<NetworkConnection> OnServerReadied;          //used to know if everyone has connected to the game and is ready to start on the server, include a timeout if someone disconnects
         //public static event Action OnServerStopped;
 
-        public List<NetworkRoomPlayerLobby> RoomPlayers { get; } = new List<NetworkRoomPlayerLobby>();          //stores all the joined player in a list, so they can all be accessed for functions
-        public List<NetworkGamePlayerLobby> GamePlayers { get; } = new List<NetworkGamePlayerLobby>();          //stores all the players in the game
+        public List<NetworkLobbyPlayer> RoomPlayers { get; } = new List<NetworkLobbyPlayer>();          //stores all the joined player in a list, so they can all be accessed for functions
+        public List<NetworkGamePlayer> GamePlayers { get; } = new List<NetworkGamePlayer>();          //stores all the players in the game
 
         //loads all game objects from resources, under the spawnable prefabs. spawnable prefabs are objects the will spawn on the network
         public override void OnStartServer()
@@ -49,16 +49,15 @@ namespace TheCleansing.Lobby
             }
         }
 
-        public override void OnClientConnect(NetworkConnection conn)                //does base logic and raises the event
+        public override void OnClientConnect()                //does base logic and raises the event
         {
-            base.OnClientConnect(conn);
-
+            base.OnClientConnect();                                     //ClientConnect(NetworkConnection conn) deprecated - use NetworkClient.connection instead
             OnClientConnected?.Invoke();
         }
 
-        public override void OnClientDisconnect(NetworkConnection conn)
+        public override void OnClientDisconnect()
         {
-            base.OnClientDisconnect(conn);
+            base.OnClientDisconnect();
 
             OnClientDisconnected?.Invoke();
         }
@@ -84,11 +83,15 @@ namespace TheCleansing.Lobby
             {
                 bool isLeader = RoomPlayers.Count == 0;           //first person in the lobby is assgined the leader
 
-                NetworkRoomPlayerLobby roomPlayerInstance = Instantiate(roomPlayerPrefab);              //spawns prefab
+                NetworkLobbyPlayer roomPlayerInstance = Instantiate(roomPlayerPrefab);              //spawns prefab
 
                 roomPlayerInstance.IsLeader = isLeader;             //sets person as leader and so will get leader privalages
+                roomPlayerInstance.ConnectionId = conn.connectionId;
+                roomPlayerInstance.PlayerNumber = RoomPlayers.Count + 1;
 
                 NetworkServer.AddPlayerForConnection(conn, roomPlayerInstance.gameObject);              //adds player for connection, assigns network connection to player
+
+                Debug.Log("Player name and Id: " + roomPlayerInstance.DisplayName + ", " + roomPlayerInstance.ConnectionId.ToString());
             }
         }
 
@@ -97,7 +100,7 @@ namespace TheCleansing.Lobby
         {
             if (conn.identity != null)
             {
-                var player = conn.identity.GetComponent<NetworkRoomPlayerLobby>();              //gets players room player script and removes it from the list on the server side
+                var player = conn.identity.GetComponent<NetworkLobbyPlayer>();              //gets players room player script and removes it from the list on the server side
 
                 RoomPlayers.Remove(player);
 
@@ -159,14 +162,18 @@ namespace TheCleansing.Lobby
                 {
                     var conn = RoomPlayers[i].connectionToClient;                   //gets their connection
                     var gameplayerInstance = Instantiate(gamePlayerPrefab);             //spawns in their game version of the prefab
+                    
                     gameplayerInstance.SetDisplayName(RoomPlayers[i].DisplayName);      //sets the display name, transfers the name from the room to the game player
-
+                    gameplayerInstance.SetConnectionId(RoomPlayers[i].ConnectionId);
+                    gameplayerInstance.SetPlayerNumber(RoomPlayers[i].PlayerNumber);
+                   
                     NetworkServer.Destroy(conn.identity.gameObject);        //destorys their game object for thier current identity, i.e. gets rid of their room player object
                     
                     //playerPrefab.GetComponent<NetworkGamePlayerLobby>().CmdSetDisplayName(conn.identity.GetComponent<NetworkGamePlayerLobby>().GetDisplayName());
                     
                     //the connection to the client is now not the object that was destroyed, it is the object that was spawned in
                     NetworkServer.ReplacePlayerForConnection(conn, gameplayerInstance.gameObject, true);          //assigns the new game player to connection player insted of the old one
+                    //NetworkServer.ReplacePlayerForConnection(conn, gameplayerInstance.gameObject);
                 }
             }
 

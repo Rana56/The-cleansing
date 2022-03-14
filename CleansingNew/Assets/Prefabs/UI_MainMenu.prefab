@@ -256,7 +256,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 194161611710418456}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 194161611883532361}
+        m_TargetAssemblyTypeName: TheCleansing.Lobby.MainMenu, Assembly-CSharp
+        m_MethodName: Exit
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &194161611802852085
 GameObject:
   m_ObjectHideFlags: 0
@@ -492,6 +504,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   networkManager: {fileID: 0}
   landingPagePanel: {fileID: 194161612277177690}
+  namePanel: {fileID: 194161613298456861}
+  IpPanel: {fileID: 194161612397449534}
+  panelInfoPage: {fileID: 194161613140891735}
 --- !u!1 &194161611894105106
 GameObject:
   m_ObjectHideFlags: 0
