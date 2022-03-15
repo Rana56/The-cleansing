@@ -156,17 +156,19 @@ namespace TheCleansing.Lobby
         public override void ServerChangeScene(string newSceneName)                 //method handles scene change, e.g. going to a game, going out of game
         {
             // From menu to game
-            if (SceneManager.GetActiveScene().path == menuScene && newSceneName.StartsWith("Main Game"))            //checks if current scene is the menu and if the new scene matches the string - going from the main menu to the game
+            if (SceneManager.GetActiveScene().path == menuScene && newSceneName.StartsWith("Map_"))            //checks if current scene is the menu and if the new scene matches the string - going from the main menu to the game
             {
                 for (int i = RoomPlayers.Count - 1; i >= 0; i--)                    //when going from menu to game, goes trough all the room players
                 {
                     var conn = RoomPlayers[i].connectionToClient;                   //gets their connection
                     var gameplayerInstance = Instantiate(gamePlayerPrefab);             //spawns in their game version of the prefab
-                    
+                    Debug.Log("Destorying lobby room object: " + gameplayerInstance);
+
                     gameplayerInstance.SetDisplayName(RoomPlayers[i].DisplayName);      //sets the display name, transfers the name from the room to the game player
                     gameplayerInstance.SetConnectionId(RoomPlayers[i].ConnectionId);
                     gameplayerInstance.SetPlayerNumber(RoomPlayers[i].PlayerNumber);
-                   
+
+                    Debug.Log("Destorying lobby room object: " + conn.identity.gameObject);
                     NetworkServer.Destroy(conn.identity.gameObject);        //destorys their game object for thier current identity, i.e. gets rid of their room player object
                     
                     //playerPrefab.GetComponent<NetworkGamePlayerLobby>().CmdSetDisplayName(conn.identity.GetComponent<NetworkGamePlayerLobby>().GetDisplayName());
@@ -174,6 +176,7 @@ namespace TheCleansing.Lobby
                     //the connection to the client is now not the object that was destroyed, it is the object that was spawned in
                     NetworkServer.ReplacePlayerForConnection(conn, gameplayerInstance.gameObject, true);          //assigns the new game player to connection player insted of the old one
                     //NetworkServer.ReplacePlayerForConnection(conn, gameplayerInstance.gameObject);
+                    Debug.Log("Replace player connection ");
                 }
             }
 

@@ -33,12 +33,13 @@ namespace TheCleansing.Lobby                   //a room player stores the user's
         {
             DontDestroyOnLoad(gameObject);          //this means that when the scene is changed the object won't be destoryed
             Game.GamePlayers.Add(this);             //adds to list for players, this instance added to list
+            Debug.Log("Adding game player name: " + this.PlayerName);
         }
 
         public override void OnStopClient()             //called whenever anyone disconnects
         {
             Game.GamePlayers.Remove(this);          //removes whoever disconnected
-
+            Debug.Log("Removing game player name: " + this.PlayerName);
         }
         
         [Server]                    //ensures the logic only run on the server
@@ -51,11 +52,13 @@ namespace TheCleansing.Lobby                   //a room player stores the user's
         public void SetConnectionId(int connID)
         {
             this.ConnectionId = connID;
+            Debug.Log("Local connId: " + this.ConnectionId);
         }
         [Server]
         public void SetPlayerNumber(int playerNum)
         {
             this.PlayerNumber = playerNum;
+            Debug.Log("Local player number: " + this.PlayerNumber);
         }
     }
 }

@@ -50,28 +50,22 @@ namespace TheCleansing.Lobby                   //a room player stores the user's
         public override void OnStartAuthority()         //called on the object that belongs to the user
         {
             CmdSetDisplayName(PlayerNameInput.DisplayName);         //a function called by a client that runs on a server, gets player name from the player's input and sets it on the server and is validated
-
+            Debug.Log("Room Lobby player name: " + this.DisplayName);
             lobbyUI.SetActive(true);            //activates ui because its ourselves and not others
         }
 
         public override void OnStartClient()            //called on every network behaviour when active on a client
         {
             Room.RoomPlayers.Add(this);             //adds to list for room players, this instance added to list
-
             UpdateDisplay();            //ui updated, e.g. whenever something starts or something is destoryed
+            Debug.Log("Adding lobby player name: " + this.DisplayName);
         }
 
         public override void OnStopClient()             //called whenever anyone disconnects
         {
             Room.RoomPlayers.Remove(this);          //removes whoever disconnected
-
             UpdateDisplay();
-
-            if (hasAuthority)
-            {
-                Debug.Log("Lobby player destroyed");
-               // MainMenu.instance.ReturnToMainMenu();               //TODO: need to fix this
-            }
+            Debug.Log("Removing lobby player name: " + this.DisplayName);
         }
 
         public void HandleReadyStatusChanged(bool oldValue, bool newValue) => UpdateDisplay();
@@ -157,6 +151,7 @@ namespace TheCleansing.Lobby                   //a room player stores the user's
         [Command]
         public void CmdReadyUp()                            //command run on server
         {
+            Debug.Log("Ready");
             IsReady = !IsReady;                             //server toggles if players have ready'd up 
 
             Room.NotifyPlayersOfReadyState();               //notifies room status of player's ready up
@@ -165,6 +160,7 @@ namespace TheCleansing.Lobby                   //a room player stores the user's
         [Command]
         public void CmdStartGame()
         {
+            Debug.Log("Start");
             if (Room.RoomPlayers[0].connectionToClient != connectionToClient) { return; }               //checks if the first person in the room is the leader
 
             Room.StartGame();

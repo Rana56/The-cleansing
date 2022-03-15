@@ -22,11 +22,14 @@ namespace TheCleansing.Lobby
             }
         }
 
-        private void Awake()
+        public override void OnStartLocalPlayer()
         {
-            Debug.Log("Reacing instantiate");
+            Debug.Log("UI instantiate");
             GameObject pUI = Instantiate(battleUI);
-            //pUI.GetComponent;
+            //camera rotation
+            Debug.Log("GamePlayer List: " + Game.GamePlayers.Count);
+            Camera.main.transform.SetParent(transform);
+            //Camera.main.transform.localPosition = new Vector3(GameObject.Find("LocalGamePlayer").GetComponent<Transform>().transform.position);
         }
 
     }

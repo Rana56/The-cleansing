@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace TheCleansing.Lobby
 {
-    public class BattleUI : NetworkBehaviour
+    public class BattleUI : MonoBehaviour
     {
         //[SerializeField] private GameObject battleUI = null;
         [SerializeField] private TMP_Text[] playerNameTexts = new TMP_Text[2];          //used for show player name
@@ -23,33 +23,48 @@ namespace TheCleansing.Lobby
             }
         }
 
-        
-        private void Awake()
+        /**
+        public void Start()
         {
-            Debug.Log("Testing");
-            SetUpBattle();
-            updateDisplay();
+            SetUpBattle()
         }
 
-        /**
+        
         public override void OnStartAuthority()
         {
-            Debug.Log("Testing");
+            Debug.Log("Testing2");
             SetUpBattle();
-            updateDisplay();
+            //updateDisplay();
+        }
+
+        public override void OnStartClient()
+        {
+            Debug.Log("Testing3");
+            SetUpBattle();
+        }
+
+        public override void OnStartLocalPlayer()
+        {
+            Debug.Log("Testing4");
+            SetUpBattle();
         }**/
 
 
         public void SetUpBattle()
         {
-            if (hasAuthority)
+            Debug.Log("Setup Test");
+
+            Debug.Log("Setup authority");
+            /**
+            for (int i = 0; i < playerNameTexts.Length; i++)
             {
-                for (int i = 0; i < playerNameTexts.Length; i++)
-                {
-                    playerNameTexts[i].text = Game.GamePlayers[i].PlayerName;
-                }
-            }
+                Debug.Log("Setup loop");
+                playerNameTexts[i].text = Game.GamePlayers[i].PlayerName;
+            }**/
+            //playerNameTexts[0].text = Game.GamePlayers[0].PlayerName;
         }
+
+        /**
         public void updateDisplay()                //updates the display of health of players
         {
             if (hasAuthority && isLocalPlayer)
@@ -61,6 +76,6 @@ namespace TheCleansing.Lobby
 
                 }
             }
-        }
+        }**/
     }
 }
