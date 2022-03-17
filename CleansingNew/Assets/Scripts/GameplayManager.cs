@@ -11,7 +11,7 @@ using Mirror;
 
 namespace TheCleansing.Lobby
 {
-	public class GameplayManager : NetworkBehaviour
+	public class GameplayManager : NetworkBehaviour				//Round system
 	{
 		[Header("GamePlayers")]
 		[SerializeField] private GameObject LocalGamePlayer;

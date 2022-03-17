@@ -42,7 +42,7 @@ namespace TheCleansing.Lobby
             
             NetworkServer.Spawn(playerInstance, conn);          //spwans it for the other clients, connection also passed a parameter to show the connection belongs to the player object that is spawned in - the user has authority over it
             //NetworkServer.AddPlayerForConnection(conn, playerInstance);
-            Debug.Log("Spawn: " + playerInstance.name);
+            Debug.Log("Spawn: " + playerInstance.name + ", id: " + conn);
 
             nextIndex++;        //increases the index, so when a new player joins they get a new spawn point
         }

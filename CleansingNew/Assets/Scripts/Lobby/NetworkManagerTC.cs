@@ -175,7 +175,7 @@ namespace TheCleansing.Lobby
                     
                     //the connection to the client is now not the object that was destroyed, it is the object that was spawned in
                     NetworkServer.ReplacePlayerForConnection(conn, gameplayerInstance.gameObject, true);          //assigns the new game player to connection player insted of the old one
-                    //NetworkServer.ReplacePlayerForConnection(conn, gameplayerInstance.gameObject);
+                    
                     Debug.Log("Replace player connection ");
                 }
             }

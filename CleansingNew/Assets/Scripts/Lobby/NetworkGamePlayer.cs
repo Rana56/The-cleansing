@@ -40,8 +40,14 @@ namespace TheCleansing.Lobby                   //a room player stores the user's
         {
             Game.GamePlayers.Remove(this);          //removes whoever disconnected
             Debug.Log("Removing game player name: " + this.PlayerName);
+
+            if(Game.GamePlayers.Count < 2)
+            {
+                Game.StopHost();
+            }
         }
-        
+
+
         [Server]                    //ensures the logic only run on the server
         public void SetDisplayName(string displayName)                      //sets dislpay name
         {

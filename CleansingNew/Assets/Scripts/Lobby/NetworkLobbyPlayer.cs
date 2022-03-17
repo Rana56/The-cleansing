@@ -133,15 +133,6 @@ namespace TheCleansing.Lobby                   //a room player stores the user's
             }
         }
 
-        private void OnClientDisconnect()            //when lobby player the client has authority over is destroyed, returns user to main menu
-        {
-            if (hasAuthority)
-            {
-                Debug.Log("Lobby player destroyed");
-                MainMenu.instance.ReturnToMainMenu();               //TODO: need to fix this
-            }
-        }
-
         [Command]
         private void CmdSetDisplayName(string displayName)              //when name recived by server, sets name of player
         {
