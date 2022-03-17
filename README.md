@@ -1,4 +1,4 @@
-# The-Cleansing Team-Project
+# Team 13 Team-Project
 Welcome to the project.
 This is the repo for the game's code.
 
