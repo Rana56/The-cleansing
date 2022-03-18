@@ -22,8 +22,10 @@ namespace TheCleansing.Lobby
         [SerializeField] private TMP_Text playerName = null;          //used for show player name
         [SerializeField] private TMP_Text playerHealth = null;          //used for show player health
 
+        public uint PlayerNetId { get; private set; }           //stores player net ID
+
         private NetworkManagerTC game;
-        private NetworkManagerTC Game        //a way to reference room easliy
+        private NetworkManagerTC Game        //a way to reference game easliy
         {
             get
             {
@@ -32,31 +34,29 @@ namespace TheCleansing.Lobby
             }
         }
 
-
-        /**
-        
-        public void Awake()
-        {
-            Debug.Log("Testing2");
-            SetUpBattle();
-        }**/
-
         public void activateUI()
         {
             battleUI.SetActive(true);         //turns on UI
             gameObject.name = "LocalBattleUI";
         }
 
-        public void SetUpUINames()
+        public void SetUpUI(Player player)          //sets the name of the players to UI
         {
-            Debug.Log("Setup Test");
-            localName.text = GameObject.Find("LocalGamePlayer").GetComponent<NetworkGamePlayer>().PlayerName;       //sets name by finding the gameobject for NetworkGamePlayer, then getting the script of it and then retrives the name of player
-            /*
-            for (int i = 0; i < playerNameTexts.Length; i++)
+            PlayerNetId = player.netId;         //stores the net id of player
+
+            Debug.Log("Setup UI");
+            
+            for (int i = 0; i < Game.GamePlayers.Count; i++)                        //loops over the list of game players (the connected players), then checks if they are a local player.
             {
-                Debug.Log("Setup loop");
-                playerNameTexts[i].text = Game.GamePlayers[i].PlayerName;
-            }*/
+                if (Game.GamePlayers[i].name.Equals("LocalGamePlayer"))
+                {
+                    localName.text = Game.GamePlayers[i].PlayerName;                //If it's true, the player name is assigned to appropriate text
+                }
+                else
+                {
+                    playerName.text = Game.GamePlayers[i].PlayerName;
+                }
+            }
         }
 
         /**
@@ -77,6 +77,9 @@ namespace TheCleansing.Lobby
         #region Old Code
         /*
         [SerializeField] private TMP_Text[] playerHealths = new TMP_Text[2];
+
+        //localName.text = GameObject.Find("LocalGamePlayer").GetComponent<NetworkGamePlayer>().PlayerName;       //sets name by finding the gameobject for NetworkGamePlayer, then getting the script of it and then retrives the name of player
+        //playerName.text = GameObject.Find("LocalGamePlayer").GetComponent<NetworkGamePlayer>().PlayerName;
         */
         #endregion
     }

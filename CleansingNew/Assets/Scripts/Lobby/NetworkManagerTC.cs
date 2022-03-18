@@ -143,7 +143,7 @@ namespace TheCleansing.Lobby
         }
 
         
-        public void StartGame()                     //when start button is pressed, this functio is run
+        public void StartGame()                     //when start button is pressed, this function is run
         {
             if (SceneManager.GetActiveScene().path == menuScene)         //checks is current scene is the menu
             {

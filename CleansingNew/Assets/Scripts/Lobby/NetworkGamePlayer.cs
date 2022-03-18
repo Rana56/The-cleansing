@@ -55,13 +55,13 @@ namespace TheCleansing.Lobby                   //a room player stores the user's
             Debug.Log("Local player name: " + this.PlayerName);
         }
         [Server]
-        public void SetConnectionId(int connID)
+        public void SetConnectionId(int connID)                         //set connection id
         {
             this.ConnectionId = connID;
             Debug.Log("Local connId: " + this.ConnectionId);
         }
         [Server]
-        public void SetPlayerNumber(int playerNum)
+        public void SetPlayerNumber(int playerNum)                      //set playerNum
         {
             this.PlayerNumber = playerNum;
             Debug.Log("Local player number: " + this.PlayerNumber);

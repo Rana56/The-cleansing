@@ -28,7 +28,7 @@ namespace TheCleansing.Lobby
                 gameObject.name = "LocalPlayer";
                 localUI = playerUI.GetComponent<BattleUI>();
                 localUI.GetComponent<BattleUI>().activateUI();
-                localUI.SetUpUINames();
+                localUI.SetUpUI(this);
             }
         }
 
