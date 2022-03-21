@@ -28,7 +28,8 @@ namespace TheCleansing.Lobby
 
         public List<NetworkLobbyPlayer> RoomPlayers { get; } = new List<NetworkLobbyPlayer>();          //stores all the joined player in a list, so they can all be accessed for functions
         public List<NetworkGamePlayer> GamePlayers { get; } = new List<NetworkGamePlayer>();          //stores all the players in the game
-
+        public List<Player> SpawnedGamePlayers { get; } = new List<Player>();                 //stores all the physical game players, the gameobejects on screen
+        
         //loads all game objects from resources, under the spawnable prefabs. spawnable prefabs are objects the will spawn on the network
         public override void OnStartServer()
         {
@@ -140,6 +141,7 @@ namespace TheCleansing.Lobby
 
             RoomPlayers.Clear();
             GamePlayers.Clear();
+            SpawnedGamePlayers.Clear();
         }
 
         
@@ -197,8 +199,6 @@ namespace TheCleansing.Lobby
                 GameObject playerSpawnSystemInstance = Instantiate(playerSpawnSystem);              //spwans the player spawn system, connection not passed as parameter, so the server owns it
                 NetworkServer.Spawn(playerSpawnSystemInstance);                 //all clients has a spawn system and is owned by the server
 
-                //GameObject battleUI_Instance = Instantiate(battleUI);           //spawns battleUI
-                //NetworkServer.Spawn(battleUI_Instance);
             }
         }
         

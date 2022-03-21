@@ -16,6 +16,16 @@ namespace TheCleansing.Lobby
         //[SyncVar(hook = nameof(HandleOwnerSet))]
         private uint ownerID;
 
+        private NetworkManagerTC game;
+        private NetworkManagerTC Game        //a way to reference game easliy
+        {
+            get
+            {
+                if (game != null) { return game; }
+                return game = NetworkManager.singleton as NetworkManagerTC;          //casts the networkManager as a networkManagerLobby
+            }
+        }
+
         public override void OnStartClient()
         {
             Debug.Log("UI instantiate");
@@ -25,11 +35,15 @@ namespace TheCleansing.Lobby
             if (hasAuthority)                                       //Turns on UI only for local player
             {
                 Debug.Log("Local Player");
-                gameObject.name = "LocalPlayer";
+                gameObject.name = "LocalPlayer";                        //changes game object's name of physical player
+
                 localUI = playerUI.GetComponent<BattleUI>();
-                localUI.GetComponent<BattleUI>().activateUI();
+                localUI.activateUI();
                 localUI.SetUpUI(this);
             }
+
+            Game.SpawnedGamePlayers.Add(this);                      //adds this player instance to list so all players can be referenced
+            Debug.Log("Local Player spawned: " + Game.SpawnedGamePlayers.Count);
         }
 
         public uint OwnerID => ownerID;             //this method returns the owner id of player
@@ -43,6 +57,12 @@ namespace TheCleansing.Lobby
             //cameraTransform.rotation = this.GetComponent<Transform>().rotation;
 
             //Camera.main.transform.localPosition = new Vector3(GameObject.Find("LocalGamePlayer").GetComponent<Transform>().transform.position);
+        }
+
+        public override void OnStartLocalPlayer()
+        {
+            //Camera.main.transform.SetParent(transform);
+            //Camera.main.transform.localPosition = new Vector3(0,0,0);
         }
 
     }

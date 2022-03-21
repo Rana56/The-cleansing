@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 4392471844105170995}
   - component: {fileID: 8179000986343112156}
   - component: {fileID: 4979015387944167800}
+  - component: {fileID: -5489342222826855178}
   m_Layer: 0
   m_Name: NetworkGamePlayer
   m_TagString: Untagged
@@ -64,3 +65,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
+  PlayerName: Loading...
+  ConnectionId: 0
+  PlayerNumber: 0
+--- !u!114 &-5489342222826855178
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8193603193368341796}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 58371ce91600de04d89ae905437649b3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
+  unitName: 
+  damage: 0
+  maxHP: 200
+  currentHP: 200
