@@ -22,6 +22,7 @@ namespace TheCleansing.Lobby
         [SerializeField] private TMP_Text playerName = null;          //used for show player name
         [SerializeField] private TMP_Text playerHealth = null;          //used for show player health
 
+        [SerializeField] private TMP_Text info_text = null;
         public uint PlayerNetId { get; private set; }           //stores player net ID
 
         private NetworkManagerTC game;
@@ -48,6 +49,9 @@ namespace TheCleansing.Lobby
 
             for (int i = 0; i < Game.GamePlayers.Count; i++)                        //loops over the list of game players (the connected players), then checks if they are a local player.
             {
+                Health health = Game.GamePlayers[i].GetComponentInParent<Health>();
+                //health.OnHealthChanged += HandleHealthChanged;
+                health.OnHealthChanged += updateHealthDisplay;
                 if (Game.GamePlayers[i].name.Equals("LocalGamePlayer"))
                 {
                     localName.text = Game.GamePlayers[i].PlayerName;                //If it's true, the player name is assigned to appropriate text
@@ -56,7 +60,8 @@ namespace TheCleansing.Lobby
                 {
                     playerName.text = Game.GamePlayers[i].PlayerName;
                 }
-            }
+            } 
+
             updateHealthDisplay();
         }
 
@@ -80,6 +85,26 @@ namespace TheCleansing.Lobby
             }
         }
 
+        public void Attack()
+        {
+            Debug.Log("Attack");
+            for (int i = 0; i < Game.GamePlayers.Count; i++)
+            {
+                Health health = Game.GamePlayers[i].GetComponentInParent<Health>();                     //gets health script attched to NetworkGamePlayer
+
+                if (!Game.GamePlayers[i].name.Equals("LocalGamePlayer"))
+                {
+                    Debug.Log("Remove health");
+                    health.Remove(10);               //changes player health, doesn't change own health
+                }
+
+            }
+        }
+
+        public void Heal()
+        {
+            Debug.Log("Heal");
+        }
 
         #region Old Code
         /*

@@ -10,26 +10,33 @@ namespace TheCleansing.Lobby
 
         [SerializeField] private float MaxHP = 200;
 
-        [SyncVar(hook = nameof(HandleHelathUpdated))]          //synced across the network and calls method whenever health is updated
+        [SyncVar(hook = nameof(HandleHealthUpdated))]          //synced across the network and calls method whenever health is updated
         [SerializeField] private float health = 0;             //sync the health
 
         public static event EventHandler<DeathEventArgs> OnDeath;
-        public event EventHandler<HealthChangedEventArgs> OnHealthChanged;
+        //public event EventHandler<HealthChangedEventArgs> OnHealthChanged;
+        public event Action OnHealthChanged;
 
         public bool IsDead => health == 0;              //function that checks if health is euqal to 0, returns true if check is correct
 
         public override void OnStartServer()            //when server starts, sets the health of players
         {
             health = MaxHP;
+            Debug.Log("Setting health");
         }
 
-        private void HandleHelathUpdated(float oldValue, float newValue)                //this method run whenever the health is changed
+        private void HandleHealthUpdated(float oldValue, float newValue)                //this method run whenever the health is changed
         {
+            OnHealthChanged?.Invoke();
+            Debug.Log("Invoking health");
+
+            /*
             OnHealthChanged?.Invoke(this, new HealthChangedEventArgs
             {
                 CurrentHealth = health,
                 MaxHealth = MaxHP
-            });
+            });*/
+
         }
 
         [Server]
@@ -40,12 +47,12 @@ namespace TheCleansing.Lobby
             health = Mathf.Min(health + value, MaxHP);          //sets health to the smallest value of passed paramter, i.e. can't have helath more than max health    
         }
 
-        [Server]
-        public void Remove(float value)                 //removes helath from player
+        [Command(requiresAuthority = false)]
+        public void Remove(float value)                 //removes health from player
         {
             value = Mathf.Max(value, 0);
 
-            health = Mathf.Min(health - value, 0);              //sets health to 0 if, final health goes past zero. Otherwise, sets it to value after taking damage
+            health = Mathf.Max(health - value, 0);              //sets health to 0 if, final health goes past zero. Otherwise, sets it to value after taking damage
 
             if (health == 0)
             {
@@ -58,7 +65,9 @@ namespace TheCleansing.Lobby
         private void RpcHandleDeath()                       //method called on server and run on clients
         {
             //gameObject.SetActive(false);  
-            GameObject.Find("LocalPlayer").SetActive(false);            //turns off the player game object
+            //GameObject.Find("LocalPlayer").SetActive(false);            //turns off the player game object
+            //TODO despawn player object
+            Debug.Log("Despawn Player object");
         }
 
         public float getHp()
