@@ -10,7 +10,9 @@ namespace TheCleansing.Lobby
 {
     public class BattleUI : NetworkBehaviour
     {
+        [Header("UIs")]
         [SerializeField] private GameObject battleUI = null;
+        [SerializeField] private GameObject movesUI = null;
 
         //local player
         [Header("Local Player")]
@@ -24,7 +26,6 @@ namespace TheCleansing.Lobby
 
         [SerializeField] private TMP_Text info_text = null;
         public uint PlayerNetId { get; private set; }           //stores player net ID
-
         NetworkGamePlayer otherPlayer = null;                           //connected players are stored in variables
         NetworkGamePlayer localPlayer = null;
 
@@ -42,6 +43,26 @@ namespace TheCleansing.Lobby
         {
             battleUI.SetActive(true);         //turns on UI
             gameObject.name = "LocalBattleUI";
+        }
+
+        public void deactivateMovesUI()               //deactivates the moves panel
+        {
+            Debug.Log("Deactivate buttons");
+            Button[] buttons = movesUI.GetComponentsInChildren<Button>();           //gets all the buttons in panel 
+            foreach(Button button in buttons)                                       //loops through the buttons and makes it not interatable
+            {
+                button.interactable = false;                        //makes button not interactable
+            }
+        }
+
+        public void activateMovesUI()               //deactivates the moves panel
+        {
+            Debug.Log("Activate buttons");
+            Button[] buttons = movesUI.GetComponentsInChildren<Button>();           //gets all the buttons in panel 
+            foreach (Button button in buttons)                                       //loops through the buttons and makes it not interatable
+            {
+                button.interactable = true;                        //makes button not interactable
+            }
         }
 
         public void SetUpUI(Player player)          //sets the name of the players to UI
@@ -89,16 +110,18 @@ namespace TheCleansing.Lobby
             }
         }
 
-        public void Attack()
+        public void Attack()            //attacks opponent
         {
             Debug.Log("Attack health");
 
             Health health = localPlayer.GetComponentInParent<Health>();                     //gets health script attched to NetworkGamePlayer
                                                                                                     //changes player health, doesn't change own health
             health.AttackPlayer(10, otherPlayer);                                           //local payer calls command
+
+            deactivateMovesUI();
         }
 
-        public void Heal()
+        public void Heal()              //heals player
         {
             Debug.Log("Heal");
 

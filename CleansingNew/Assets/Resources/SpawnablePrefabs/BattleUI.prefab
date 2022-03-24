@@ -887,6 +887,7 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0.1
   battleUI: {fileID: 1347215326805462162}
+  movesUI: {fileID: 1347215327828290274}
   localName: {fileID: 1347215326473319406}
   localHealth: {fileID: 1347215328140636613}
   playerName: {fileID: 1347215326717358294}

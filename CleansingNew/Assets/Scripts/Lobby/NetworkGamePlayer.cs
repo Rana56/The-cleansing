@@ -13,7 +13,7 @@ namespace TheCleansing.Lobby                   //a room player stores the user's
         [SyncVar]
         public int PlayerNumber;                    //used to track who is player 1 and 2
         [SyncVar]
-        public bool isReady;                        //checks if the player is ready
+        public bool IsReady;                        //checks if the player is ready
 
         private NetworkManagerTC game;
         private NetworkManagerTC Game        //a way to reference room easliy
@@ -49,6 +49,13 @@ namespace TheCleansing.Lobby                   //a room player stores the user's
             }
         }
 
+        [Command]
+        public void CmdReadyUp()                            //command run on server
+        {
+            Debug.Log("Ready");
+            IsReady = !IsReady;                             //server toggles if players have ready'd up 
+
+        }
 
         [Server]                    //ensures the logic only run on the server
         public void SetDisplayName(string displayName)                      //sets dislpay name
