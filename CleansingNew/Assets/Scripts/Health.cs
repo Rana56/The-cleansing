@@ -14,7 +14,6 @@ namespace TheCleansing.Lobby
         [SerializeField] private float health = 0;             //sync the health
 
         public static event EventHandler<DeathEventArgs> OnDeath;
-        //public event EventHandler<HealthChangedEventArgs> OnHealthChanged;
         public event Action OnHealthChanged;
 
         public bool IsDead => health == 0;              //function that checks if health is euqal to 0, returns true if check is correct
@@ -27,16 +26,8 @@ namespace TheCleansing.Lobby
 
         private void HandleHealthUpdated(float oldValue, float newValue)                //this method run whenever the health is changed
         {
-            OnHealthChanged?.Invoke();
             Debug.Log("Invoking health");
-
-            /*
-            OnHealthChanged?.Invoke(this, new HealthChangedEventArgs
-            {
-                CurrentHealth = health,
-                MaxHealth = MaxHP
-            });*/
-
+            OnHealthChanged?.Invoke();
         }
 
         [Server]
@@ -47,7 +38,7 @@ namespace TheCleansing.Lobby
             health = Mathf.Min(health + value, MaxHP);          //sets health to the smallest value of passed paramter, i.e. can't have helath more than max health    
         }
 
-        [Command(requiresAuthority = false)]
+        [Server]
         public void Remove(float value)                 //removes health from player
         {
             value = Mathf.Max(value, 0);
@@ -60,6 +51,18 @@ namespace TheCleansing.Lobby
             }
         }
 
+        [Command]                                                                       //comand called by local player, this command is called on client and run on server
+        public void AttackPlayer(float value, NetworkGamePlayer player)
+        {
+            Health otherPlayerHealth = player.GetComponent<Health>();                   //calls server command on other player health 
+            otherPlayerHealth.Remove(value);
+        }
+
+        [Command]                                                                       //comand called by local player, this command is called on client and run on server
+        public void HealPlayer(float value)
+        {                                                                   //calls server command on other player health 
+            Add(value);
+        }
 
         [ClientRpc]                                         //when player dies, it will turn off its game object
         private void RpcHandleDeath()                       //method called on server and run on clients

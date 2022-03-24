@@ -12,6 +12,8 @@ namespace TheCleansing.Lobby                   //a room player stores the user's
         public int ConnectionId;
         [SyncVar]
         public int PlayerNumber;                    //used to track who is player 1 and 2
+        [SyncVar]
+        public bool isReady;                        //checks if the player is ready
 
         private NetworkManagerTC game;
         private NetworkManagerTC Game        //a way to reference room easliy
