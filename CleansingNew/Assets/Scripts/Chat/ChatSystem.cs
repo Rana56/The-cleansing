@@ -12,6 +12,17 @@ namespace TheCleansing.Lobby
         [SerializeField] private TMP_InputField userInput = null;
 
         private static event Action<string> OnMessage;                      //even raised when user starts writing
+        private String localPlayer;
+
+        private NetworkManagerTC game;
+        private NetworkManagerTC Game        //a way to reference room easliy
+        {
+            get
+            {
+                if (game != null) { return game; }
+                return game = NetworkManager.singleton as NetworkManagerTC;          //casts the networkManager as a networkManagerLobby
+            }
+        }
 
         public override void OnStartAuthority()
         {
@@ -20,8 +31,21 @@ namespace TheCleansing.Lobby
             OnMessage += HandleNewMessage;                  //subsribe to event, handleNewMessage called every time onMessage invoked
         }
 
+        public override void OnStartClient()
+        {
+            Debug.Log("Chat Client Started");
+            for (int i = 0; i < Game.GamePlayers.Count; i++)                        //loops over the list of game players (the connected players), then checks if they are a local player.
+            {
+                if (Game.GamePlayers[i].isLocalPlayer)                       //checks if we have authoirtym, i.e we own it and control
+                {
+                    localPlayer = Game.GamePlayers[i].PlayerName;           //sets the name of the local player
+                    Debug.Log(localPlayer);
+                }
+            }
+        }
+
         [ClientCallback]
-        private void OnDestroy()
+        private void OnDestroy()                        //called when object destroyed
         {
             if (!hasAuthority) { return; }
 
@@ -45,14 +69,16 @@ namespace TheCleansing.Lobby
             userInput.text = string.Empty;                                  //resets inputfield to empty
         }
 
+
+        //TODO fix chat so it displays name of players
         [Command]
         private void CmdSendMessage(string message)                                     //sends message to server, called by client, run on server
         {
-            RpcHandleMessage($"[{connectionToClient.connectionId}]: {message}");
+            RpcHandleMessage($"[{connectionToClient.connectionId}]: {message}");            //formats message, connectionToClient.connectionId
         }
 
         [ClientRpc]                                                 //called on server, run on clients
-        private void RpcHandleMessage(string message)
+        private void RpcHandleMessage(string message)               //message sent from local player shown to other client
         {
             OnMessage?.Invoke($"\n{message}");
         }

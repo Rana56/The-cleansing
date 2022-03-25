@@ -23,7 +23,6 @@ namespace TheCleansing.Lobby
 
         public string CurrentGamePhase;                                             //game phase that checks if its attacking or animations time 
         
-
         public static event Action OnClientConnected;
         public static event Action OnClientDisconnected;
         public static event Action<NetworkConnection> OnServerReadied;          //used to know if everyone has connected to the game and is ready to start on the server, include a timeout if someone disconnects
@@ -123,7 +122,7 @@ namespace TheCleansing.Lobby
         }
 
         
-        public bool IsReadyToStart()
+        public bool IsReadyToStart()                                //loops through lobby player to check if they are ready
         {
             if (numPlayers < minPlayers) { return false; }          //if min players not reached, game won't start
 
@@ -136,6 +135,69 @@ namespace TheCleansing.Lobby
             }
 
             return true;        //returns true, if it doens't meet the previous if requirements
+        }
+
+        public bool IsReadyToAction()                               //loops through lobby player to check if they are ready
+        {
+            if (numPlayers < minPlayers) { return false; }          //if min players not reached, game won't start
+
+            foreach (var player in GamePlayers)                 //if all the players are not ready, game won't start
+            {
+                if (!player.IsReady)
+                {
+                    return false;
+                }
+            }
+
+            return true;        //returns true, if it doens't meet the previous if requirements
+        }
+
+        public void SetGameReadyFalse()                                 //sets the ready of game players back to false, so they can continue with their moves
+        {
+            foreach (NetworkGamePlayer player in GamePlayers)
+            {
+                Debug.Log("Setting Players to False");
+                player.IsReady = false;
+            }
+        }
+
+        public void ChangeGamePhase(string newGamePhase)                    //changes the game phase between "Move selection" and "Animation"
+        {
+            CurrentGamePhase = newGamePhase;
+            Debug.Log(CurrentGamePhase);
+            if (newGamePhase == "Move Selection")
+            {
+                Debug.Log("Moves Selection");
+                //end move selection
+                SetGameReadyFalse();                                        //gameplayers set to false
+
+                BattleUI[] moveUIs = FindObjectsOfType<BattleUI>();        //gets all the battle UI and activates it again
+                foreach (BattleUI ui in moveUIs)
+                {
+                    ui.activateMovesUI();                   //TODO Fix doesn't work for other clients
+                }
+
+            }
+            else if (newGamePhase == "Animation")
+            {
+                Debug.Log("Animations...");
+                //Animation function
+                //TODO timer - waits for a few seconds
+                ChangeGamePhase("Move Selection");                   //changes game phase back to move 
+            }
+            else
+            {
+                Debug.Log("Error Game Phase: " + newGamePhase);
+            }
+        }
+
+        public void NotifyGamePlayerReady()             //checks if all game player are ready
+        {
+            if (IsReadyToAction())                      //loops through all the players to see if they are ready to start
+            {
+                Debug.Log("Change to animation phase");             //does animations one all players are ready
+                ChangeGamePhase("Animation");
+            }
         }
 
         public override void OnStopServer()         //called when server is stopped, called for every client - clears list and list is empty when starting new game
