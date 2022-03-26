@@ -1,4 +1,5 @@
 using Mirror;
+using System;
 using TMPro;
 using UnityEngine;
 
@@ -12,6 +13,12 @@ namespace TheCleansing.Lobby                   //a room player stores the user's
         public int ConnectionId;
         [SyncVar]
         public int PlayerNumber;                    //used to track who is player 1 and 2
+        [SyncVar (hook = nameof(HandleReadyChange))]
+        public bool IsReady = false;                        //checks if the player is ready
+        [SyncVar]
+        public int score;
+
+        public event Action UpdateReady;
 
         private NetworkManagerTC game;
         private NetworkManagerTC Game        //a way to reference room easliy
@@ -47,6 +54,20 @@ namespace TheCleansing.Lobby                   //a room player stores the user's
             }
         }
 
+        private void HandleReadyChange(bool oldValue, bool newValue)
+        {
+            Debug.Log("Invoke ready up");
+            UpdateReady?.Invoke();
+        }
+
+        [Command]
+        public void CmdReadyUp()                            //command run on server
+        {
+            Debug.Log("Ready");
+            IsReady = !IsReady;                             //server toggles if players have ready'd up 
+
+            Game.NotifyGamePlayerReady();                   //tells server player is ready
+        }
 
         [Server]                    //ensures the logic only run on the server
         public void SetDisplayName(string displayName)                      //sets dislpay name
@@ -54,17 +75,26 @@ namespace TheCleansing.Lobby                   //a room player stores the user's
             this.PlayerName = displayName;
             Debug.Log("Local player name: " + this.PlayerName);
         }
+
         [Server]
-        public void SetConnectionId(int connID)
+        public void SetConnectionId(int connID)                         //set connection id
         {
             this.ConnectionId = connID;
             Debug.Log("Local connId: " + this.ConnectionId);
         }
+
         [Server]
-        public void SetPlayerNumber(int playerNum)
+        public void SetPlayerNumber(int playerNum)                      //set playerNum
         {
             this.PlayerNumber = playerNum;
             Debug.Log("Local player number: " + this.PlayerNumber);
         }
+
+        [Server]
+        public void IncrementScore()            //incements score - score is the amount the player has won
+        {
+            score++;
+        }
+
     }
 }

@@ -19,16 +19,19 @@ namespace TheCleansing.Lobby
         [Header("Game")]
         [SerializeField] private NetworkGamePlayer gamePlayerPrefab = null;
         [SerializeField] private GameObject playerSpawnSystem = null;                   //gameobject with the player spawn system
-        //[SerializeField] private GameObject battleUI = null;
+        [SerializeField] private GameObject gameManager = null;
 
+        public string CurrentGamePhase;                                             //game phase that checks if its attacking or animations time 
+        
         public static event Action OnClientConnected;
         public static event Action OnClientDisconnected;
         public static event Action<NetworkConnection> OnServerReadied;          //used to know if everyone has connected to the game and is ready to start on the server, include a timeout if someone disconnects
-        //public static event Action OnServerStopped;
+        public static event Action OnServerStopped;                             //called when server stopped
 
         public List<NetworkLobbyPlayer> RoomPlayers { get; } = new List<NetworkLobbyPlayer>();          //stores all the joined player in a list, so they can all be accessed for functions
         public List<NetworkGamePlayer> GamePlayers { get; } = new List<NetworkGamePlayer>();          //stores all the players in the game
-
+        public List<Player> SpawnedGamePlayers { get; } = new List<Player>();                 //stores all the physical game players, the gameobejects on screen
+        
         //loads all game objects from resources, under the spawnable prefabs. spawnable prefabs are objects the will spawn on the network
         public override void OnStartServer()
         {
@@ -119,7 +122,7 @@ namespace TheCleansing.Lobby
         }
 
         
-        public bool IsReadyToStart()
+        public bool IsReadyToStart()                                //loops through lobby player to check if they are ready
         {
             if (numPlayers < minPlayers) { return false; }          //if min players not reached, game won't start
 
@@ -134,16 +137,81 @@ namespace TheCleansing.Lobby
             return true;        //returns true, if it doens't meet the previous if requirements
         }
 
+        public bool IsReadyToAction()                               //loops through lobby player to check if they are ready
+        {
+            if (numPlayers < minPlayers) { return false; }          //if min players not reached, game won't start
+
+            foreach (var player in GamePlayers)                 //if all the players are not ready, game won't start
+            {
+                if (!player.IsReady)
+                {
+                    return false;
+                }
+            }
+
+            return true;        //returns true, if it doens't meet the previous if requirements
+        }
+
+        public void SetGameReadyFalse()                                 //sets the ready of game players back to false, so they can continue with their moves
+        {
+            foreach (NetworkGamePlayer player in GamePlayers)
+            {
+                Debug.Log("Setting Players to False");
+                player.IsReady = false;
+                Debug.Log(player.IsReady);
+            }
+        }
+
+        public void ChangeGamePhase(string newGamePhase)                    //changes the game phase between "Move selection" and "Animation"
+        {
+            CurrentGamePhase = newGamePhase;
+            if (newGamePhase == "Move Selection")
+            {
+                Debug.Log("Moves Selection");
+                //end move selection
+                SetGameReadyFalse();                                        //gameplayers set to false
+
+                /*
+                BattleUI[] moveUIs = FindObjectsOfType<BattleUI>();        //gets all the battle UI and activates it again
+                foreach (BattleUI ui in moveUIs)
+                {
+                    ui.activateMovesUI();                   //TODO Fix doesn't work for other clients
+                }*/
+
+            }
+            else if (newGamePhase == "Animation")
+            {
+                Debug.Log("Animations...");
+                //Animation function
+                //TODO timer - waits for a few seconds
+                ChangeGamePhase("Move Selection");                   //changes game phase back to move 
+            }
+            else
+            {
+                Debug.Log("Error Game Phase: " + newGamePhase);
+            }
+        }
+
+        public void NotifyGamePlayerReady()             //checks if all game player are ready
+        {
+            if (IsReadyToAction())                      //loops through all the players to see if they are ready to start
+            {
+                Debug.Log("Change to animation phase");             //does animations one all players are ready
+                ChangeGamePhase("Animation");
+            }
+        }
+
         public override void OnStopServer()         //called when server is stopped, called for every client - clears list and list is empty when starting new game
         {
-            //OnServerStopped?.Invoke();          //checks server is stopped before clearing lists
+            OnServerStopped?.Invoke();          //checks server is stopped before clearing lists
 
             RoomPlayers.Clear();
             GamePlayers.Clear();
+            SpawnedGamePlayers.Clear();
         }
 
         
-        public void StartGame()                     //when start button is pressed, this functio is run
+        public void StartGame()                     //when start button is pressed, this function is run
         {
             if (SceneManager.GetActiveScene().path == menuScene)         //checks is current scene is the menu
             {
@@ -178,6 +246,8 @@ namespace TheCleansing.Lobby
                     
                     Debug.Log("Replace player connection ");
                 }
+
+                CurrentGamePhase = "Move Selection";                        
             }
 
             base.ServerChangeScene(newSceneName);       //does the base logic for chaging the scene
@@ -197,8 +267,8 @@ namespace TheCleansing.Lobby
                 GameObject playerSpawnSystemInstance = Instantiate(playerSpawnSystem);              //spwans the player spawn system, connection not passed as parameter, so the server owns it
                 NetworkServer.Spawn(playerSpawnSystemInstance);                 //all clients has a spawn system and is owned by the server
 
-                //GameObject battleUI_Instance = Instantiate(battleUI);           //spawns battleUI
-                //NetworkServer.Spawn(battleUI_Instance);
+                GameObject gameManagerInstance = Instantiate(gameManager);
+                NetworkServer.Spawn(gameManagerInstance);
             }
         }
         
