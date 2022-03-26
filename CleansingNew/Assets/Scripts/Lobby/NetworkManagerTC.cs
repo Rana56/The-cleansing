@@ -158,24 +158,25 @@ namespace TheCleansing.Lobby
             {
                 Debug.Log("Setting Players to False");
                 player.IsReady = false;
+                Debug.Log(player.IsReady);
             }
         }
 
         public void ChangeGamePhase(string newGamePhase)                    //changes the game phase between "Move selection" and "Animation"
         {
             CurrentGamePhase = newGamePhase;
-            Debug.Log(CurrentGamePhase);
             if (newGamePhase == "Move Selection")
             {
                 Debug.Log("Moves Selection");
                 //end move selection
                 SetGameReadyFalse();                                        //gameplayers set to false
 
+                /*
                 BattleUI[] moveUIs = FindObjectsOfType<BattleUI>();        //gets all the battle UI and activates it again
                 foreach (BattleUI ui in moveUIs)
                 {
                     ui.activateMovesUI();                   //TODO Fix doesn't work for other clients
-                }
+                }*/
 
             }
             else if (newGamePhase == "Animation")

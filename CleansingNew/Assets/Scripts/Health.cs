@@ -71,6 +71,7 @@ namespace TheCleansing.Lobby
             //GameObject.Find("LocalPlayer").SetActive(false);            //turns off the player game object
             //TODO despawn player object
             Debug.Log("Despawn Player object");
+
         }
 
         public float getHp()

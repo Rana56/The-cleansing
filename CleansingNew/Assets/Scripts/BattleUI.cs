@@ -118,7 +118,7 @@ namespace TheCleansing.Lobby
         {
             Debug.Log("Attack health");                                                     //gets health script attched to NetworkGamePlayer
             Health health = localPlayer.GetComponentInParent<Health>();                     //changes player health, doesn't change own health
-            health.AttackPlayer(10, otherPlayer);                                           //local payer calls command
+            health.AttackPlayer(20, otherPlayer);                                           //local payer calls command
 
             localPlayer.CmdReadyUp();                                                       //readies local player
             deactivateMovesUI();
@@ -136,16 +136,32 @@ namespace TheCleansing.Lobby
 
         public void readyCheck()
         {
-            if (localPlayer.IsReady && !otherPlayer.IsReady)                         //changes notificiation
+            if (localPlayer.IsReady && !otherPlayer.IsReady)                            //if local player is ready and other player is not ready, it will change the notification           
             {
-                info_text.text = "Wating for other Player...";
-            } else if (localPlayer.IsReady && otherPlayer.IsReady)
+                Debug.Log("Local player ready and other player not ready");
+                info_text.text = "Wating for other Player...";                      //changes notificiation
+
+            } else if (localPlayer.IsReady && otherPlayer.IsReady)              //if both players are ready, it will make the notification blank
             {
+                Debug.Log("Both player ready");
                 info_text.text = "";
+
+            } 
+            else if (!localPlayer.IsReady && !otherPlayer.IsReady){
+                info_text.text = "Select your move";
+                activateMovesUI();
             }
             else
             {
                 info_text.text = "Select your move";                                        //TODO: Fix this so when other player selects it updates localuser too
+                activateMovesUI();
+                /*
+                BattleUI[] moveUIs = FindObjectsOfType<BattleUI>();        //gets all the battle UI and activates it again
+                foreach (BattleUI ui in moveUIs)
+                {
+                    ui.activateMovesUI();                   //TODO Fix doesn't work for other clients
+                }*/
+                                                             //activates move ui, i.e. both players' ready is false            
             }
         }
 
@@ -167,6 +183,12 @@ namespace TheCleansing.Lobby
         //playerName.text = GameObject.Find("LocalGamePlayer").GetComponent<NetworkGamePlayer>().PlayerName;
 
         localHealth.text = player.GetComponent<Health>().toString();
+
+        else if (!localPlayer.IsReady && !otherPlayer.IsReady)            //if boths players are not ready, it will activate the move ui
+            {
+                Debug.Log("Acctiviating move UI");
+                activateMovesUI();
+            }
         */
         #endregion
     }

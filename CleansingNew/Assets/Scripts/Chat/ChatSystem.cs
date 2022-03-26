@@ -26,6 +26,7 @@ namespace TheCleansing.Lobby
 
         public override void OnStartAuthority()
         {
+            Debug.Log("Activating Chat");
             chatUI.SetActive(true);                             //activates UI
 
             OnMessage += HandleNewMessage;                  //subsribe to event, handleNewMessage called every time onMessage invoked
@@ -34,9 +35,11 @@ namespace TheCleansing.Lobby
         public override void OnStartClient()
         {
             Debug.Log("Chat Client Started");
+            
+            
             for (int i = 0; i < Game.GamePlayers.Count; i++)                        //loops over the list of game players (the connected players), then checks if they are a local player.
             {
-                if (Game.GamePlayers[i].isLocalPlayer)                       //checks if we have authoirtym, i.e we own it and control
+                if (connectionToClient.connectionId == Game.GamePlayers[i].ConnectionId)                       //checks if connection to client matches network game player
                 {
                     localPlayer = Game.GamePlayers[i].PlayerName;           //sets the name of the local player
                     Debug.Log(localPlayer);
@@ -52,13 +55,13 @@ namespace TheCleansing.Lobby
             OnMessage -= HandleNewMessage;              //unsubscribes from event
         }
 
-        private void HandleNewMessage(string message)                   //appends messages
+        private void HandleNewMessage(string message)                   //appends messages to text box
         {
             chatText.text += message;
         }
 
         [Client]
-        public void Send(string message)
+        public void Send(string message)                                    //method called on EndEdit of the inputField
         {
             if (!Input.GetKeyDown(KeyCode.Return)) { return; }              //checks if enter is pressed
 
@@ -69,12 +72,10 @@ namespace TheCleansing.Lobby
             userInput.text = string.Empty;                                  //resets inputfield to empty
         }
 
-
-        //TODO fix chat so it displays name of players
         [Command]
         private void CmdSendMessage(string message)                                     //sends message to server, called by client, run on server
         {
-            RpcHandleMessage($"[{connectionToClient.connectionId}]: {message}");            //formats message, connectionToClient.connectionId
+            RpcHandleMessage($"[{localPlayer}]: {message}");            //formats message, connectionToClient.connectionId
         }
 
         [ClientRpc]                                                 //called on server, run on clients
