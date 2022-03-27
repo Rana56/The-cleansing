@@ -17,6 +17,8 @@ namespace TheCleansing.Lobby                   //a room player stores the user's
         public bool IsReady = false;                        //checks if the player is ready
         [SyncVar]
         public int score;
+        [SyncVar]
+        public string CharacterClass;
 
         public event Action UpdateReady;
 
@@ -89,6 +91,12 @@ namespace TheCleansing.Lobby                   //a room player stores the user's
         {
             this.PlayerNumber = playerNum;
             Debug.Log("Local player number: " + this.PlayerNumber);
+        }
+
+        [Server]
+        public void SetPlayerClass(string charcterClass)                //sets the class of player
+        {
+            this.CharacterClass = charcterClass;
         }
 
         [Server]
