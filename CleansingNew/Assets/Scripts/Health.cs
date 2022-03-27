@@ -18,6 +18,16 @@ namespace TheCleansing.Lobby
 
         public bool IsDead => health == 0;              //function that checks if health is euqal to 0, returns true if check is correct
 
+        private NetworkManagerTC game;
+        private NetworkManagerTC Game        //a way to reference game easliy
+        {
+            get
+            {
+                if (game != null) { return game; }
+                return game = NetworkManager.singleton as NetworkManagerTC;          //casts the networkManager as a networkManagerLobby
+            }
+        }
+
         public override void OnStartServer()            //when server starts, sets the health of players
         {
             health = MaxHP;
@@ -71,6 +81,13 @@ namespace TheCleansing.Lobby
             //GameObject.Find("LocalPlayer").SetActive(false);            //turns off the player game object
             //TODO despawn player object
             Debug.Log("Despawn Player object");
+            foreach(Player player in Game.SpawnedGamePlayers)
+            {
+                if(connectionToClient.connectionId == player.connectionToClient.connectionId)
+                {
+                    player.gameObject.SetActive(false);
+                }
+            }
 
         }
 

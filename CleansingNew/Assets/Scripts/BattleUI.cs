@@ -153,7 +153,7 @@ namespace TheCleansing.Lobby
             }
             else
             {
-                info_text.text = "Select your move";                                        //TODO: Fix this so when other player selects it updates localuser too
+                info_text.text = "Select your move";                                       
                 activateMovesUI();
                 /*
                 BattleUI[] moveUIs = FindObjectsOfType<BattleUI>();        //gets all the battle UI and activates it again

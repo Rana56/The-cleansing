@@ -235,6 +235,7 @@ namespace TheCleansing.Lobby
                     gameplayerInstance.SetDisplayName(RoomPlayers[i].DisplayName);      //sets the display name, transfers the name from the room to the game player
                     gameplayerInstance.SetConnectionId(RoomPlayers[i].ConnectionId);
                     gameplayerInstance.SetPlayerNumber(RoomPlayers[i].PlayerNumber);
+                    gameplayerInstance.SetPlayerClass(RoomPlayers[i].CharacterClass);       //sets the character class for the game player
 
                     Debug.Log("Destorying lobby room object: " + conn.identity.gameObject);
                     NetworkServer.Destroy(conn.identity.gameObject);        //destorys their game object for thier current identity, i.e. gets rid of their room player object
