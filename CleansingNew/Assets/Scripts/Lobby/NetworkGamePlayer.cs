@@ -48,10 +48,11 @@ namespace TheCleansing.Lobby                   //a room player stores the user's
             Game.GamePlayers.Remove(this);          //removes whoever disconnected
             Debug.Log("Removing game player name: " + this.PlayerName);
 
+            /*
             if(Game.GamePlayers.Count < 2)
             {
                 Game.StopHost();
-            }
+            }*/
         }
 
         private void HandleReadyChange(bool oldValue, bool newValue)
