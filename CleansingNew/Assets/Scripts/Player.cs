@@ -10,7 +10,7 @@ namespace TheCleansing.Lobby
 {
     public class Player : NetworkBehaviour                //physical player in game
     {
-        [SerializeField] private GameObject battleUI = null;            //UI Object
+        [SerializeField] private GameObject battleUI = null;            //UI Objects
         private BattleUI localUI;
 
         //[SyncVar(hook = nameof(HandleOwnerSet))]
