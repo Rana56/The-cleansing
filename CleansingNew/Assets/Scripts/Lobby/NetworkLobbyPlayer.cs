@@ -10,8 +10,10 @@ namespace TheCleansing.Lobby                   //a room player stores the user's
         [Header("UI")]
         [SerializeField] private GameObject lobbyUI = null;             //turns the lobby on or off for the player
         [SerializeField] private GameObject selectUI = null;            //the character selection ui for characters
+        [SerializeField] private GameObject readyUI = null;
         [SerializeField] private TMP_Text[] playerNameTexts = new TMP_Text[2];          //used for show player name
         [SerializeField] private TMP_Text[] playerReadyTexts = new TMP_Text[2];         //used to show if players are ready to start
+        //[SerializeField] private TMP_Text[] playerClassTexts = new TMP_Text[2];         //text that stores the classes of players
         [SerializeField] private Button startGameButton = null;                 //shows this button only to the leader, allows them to start game when everyone is ready
         [SerializeField] private Button readyButton = null;
 
@@ -19,12 +21,13 @@ namespace TheCleansing.Lobby                   //a room player stores the user's
         public string DisplayName = "Loading...";                   //server changes the names and the logic, it notifies all the other cilents
         [SyncVar(hook = nameof(HandleReadyStatusChanged))]          //hook is the name of the method that is called when function is executed, e.g. when ready is called, this method is called, updated the ui only when the variables are changed
         public bool IsReady = false;
+        [SyncVar(hook = nameof(HandleClassChanged))]
+        public string CharacterClass;                               //the character class the user has chosen
         [SyncVar]
         public int ConnectionId;
         [SyncVar]
         public int PlayerNumber;
-        [SyncVar]
-        public string CharacterClass;                               //the character class the user has chosen
+
 
         private bool isLeader;
         public bool IsLeader                //sets the leader boolean
@@ -54,8 +57,8 @@ namespace TheCleansing.Lobby                   //a room player stores the user's
         {
             CmdSetDisplayName(PlayerNameInput.DisplayName);         //a function called by a client that runs on a server, gets player name from the player's input and sets it on the server and is validated
             Debug.Log("Room Lobby player name: " + this.DisplayName);
-            //lobbyUI.SetActive(true);            //activates ui because its ourselves and not others
-            selectUI.SetActive(true);
+            lobbyUI.SetActive(true);            //activates ui because its ourselves and not others
+            //selectUI.SetActive(true);
         }
 
         public override void OnStartClient()            //called on every network behaviour when active on a client
@@ -74,6 +77,7 @@ namespace TheCleansing.Lobby                   //a room player stores the user's
 
         public void HandleReadyStatusChanged(bool oldValue, bool newValue) => UpdateDisplay();
         public void HandleDisplayNameChanged(string oldValue, string newValue) => UpdateDisplay();
+        public void HandleClassChanged(string oldValue, string newValue) => UpdateDisplay();
 
         private void UpdateDisplay()
         {
@@ -105,6 +109,7 @@ namespace TheCleansing.Lobby                   //a room player stores the user's
                 playerReadyTexts[i].text = Room.RoomPlayers[i].IsReady ?            //sets player if they are ready or not
                     "<color=green>Ready</color>" :                              //changes color depending if they are ready
                     "<color=red>Not Ready</color>";
+                //playerClassTexts[i].text = "(" + Room.RoomPlayers[i].CharacterClass + ")";          //sets character class
             }
 
             if (IsReady)
@@ -147,8 +152,8 @@ namespace TheCleansing.Lobby                   //a room player stores the user's
         public void CmdSetTank()                            //sets the class of the players, tank, healer, medic
         {
             CharacterClass = "Tank";
-            selectUI.SetActive(false);
-            lobbyUI.SetActive(true);            //activates ui because its ourselves and not others
+            //selectUI.SetActive(false);
+            //readyUI.SetActive(true);            //activates ui because its ourselves and not others
 
         }
 
@@ -156,16 +161,16 @@ namespace TheCleansing.Lobby                   //a room player stores the user's
         public void CmdSetSolider()
         {
             CharacterClass = "Solider";
-            selectUI.SetActive(false);
-            lobbyUI.SetActive(true);            //activates ui because its ourselves and not others
+            //selectUI.SetActive(false);
+            //readyUI.SetActive(true);            //activates ui because its ourselves and not others
         }
 
         [Command]
         public void CmdSetMedic()
         {
             CharacterClass = "Medic";
-            selectUI.SetActive(false);
-            lobbyUI.SetActive(true);            //activates ui because its ourselves and not others
+            //selectUI.SetActive(false);
+            //readyUI.SetActive(true);            //activates ui because its ourselves and not others
         }
 
         [Command]

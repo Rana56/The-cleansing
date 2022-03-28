@@ -85,7 +85,8 @@ namespace TheCleansing.Lobby
             {
                 if(connectionToClient.connectionId == player.connectionToClient.connectionId)
                 {
-                    player.gameObject.SetActive(false);
+                    //player.gameObject.SetActive(false);
+                    player.GetComponentInParent<MeshRenderer>().enabled = false;
                 }
             }
 
