@@ -124,7 +124,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1347215326762590759}
         m_TargetAssemblyTypeName: TheCleansing.Lobby.BattleUI, Assembly-CSharp
-        m_MethodName: 
+        m_MethodName: Attack
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -832,6 +832,7 @@ MonoBehaviour:
   syncInterval: 0.1
   battleUI: {fileID: 1347215326805462162}
   movesUI: {fileID: 1347215327828290274}
+  attackUI: {fileID: 6049051557094774556}
   localName: {fileID: 1347215326473319406}
   localHealth: {fileID: 1347215328140636613}
   playerName: {fileID: 1347215326717358294}
@@ -1930,13 +1931,13 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1347215326762590758}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: 
+      - m_Target: {fileID: 1347215326762590759}
+        m_TargetAssemblyTypeName: TheCleansing.Lobby.BattleUI, Assembly-CSharp
+        m_MethodName: Attack
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 

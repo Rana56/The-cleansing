@@ -12,7 +12,7 @@ namespace TheCleansing.Lobby
         [SerializeField] private TMP_InputField userInput = null;
 
         private static event Action<string> OnMessage;                      //even raised when user starts writing
-        private String localPlayer;
+        private String localPlayer = "";
 
         private NetworkManagerTC game;
         private NetworkManagerTC Game        //a way to reference room easliy
@@ -39,10 +39,11 @@ namespace TheCleansing.Lobby
             
             for (int i = 0; i < Game.GamePlayers.Count; i++)                        //loops over the list of game players (the connected players), then checks if they are a local player.
             {
+                Debug.Log(Game.GamePlayers[i]);
                 if (connectionToClient.connectionId == Game.GamePlayers[i].ConnectionId)                       //checks if connection to client matches network game player
                 {
-                    localPlayer = Game.GamePlayers[i].PlayerName;           //sets the name of the local player
-                    Debug.Log(localPlayer);
+                    this.localPlayer = Game.GamePlayers[i].PlayerName;           //sets the name of the local player
+                    Debug.Log(this.localPlayer);
                 }
             }
         }

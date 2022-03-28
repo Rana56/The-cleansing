@@ -9,11 +9,9 @@ namespace TheCleansing.Lobby                   //a room player stores the user's
     {
         [Header("UI")]
         [SerializeField] private GameObject lobbyUI = null;             //turns the lobby on or off for the player
-        [SerializeField] private GameObject selectUI = null;            //the character selection ui for characters
-        [SerializeField] private GameObject readyUI = null;
         [SerializeField] private TMP_Text[] playerNameTexts = new TMP_Text[2];          //used for show player name
         [SerializeField] private TMP_Text[] playerReadyTexts = new TMP_Text[2];         //used to show if players are ready to start
-        //[SerializeField] private TMP_Text[] playerClassTexts = new TMP_Text[2];         //text that stores the classes of players
+        [SerializeField] private TMP_Text[] playerClassTexts = new TMP_Text[2];         //text that stores the classes of players
         [SerializeField] private Button startGameButton = null;                 //shows this button only to the leader, allows them to start game when everyone is ready
         [SerializeField] private Button readyButton = null;
 
@@ -58,7 +56,6 @@ namespace TheCleansing.Lobby                   //a room player stores the user's
             CmdSetDisplayName(PlayerNameInput.DisplayName);         //a function called by a client that runs on a server, gets player name from the player's input and sets it on the server and is validated
             Debug.Log("Room Lobby player name: " + this.DisplayName);
             lobbyUI.SetActive(true);            //activates ui because its ourselves and not others
-            //selectUI.SetActive(true);
         }
 
         public override void OnStartClient()            //called on every network behaviour when active on a client
@@ -109,7 +106,7 @@ namespace TheCleansing.Lobby                   //a room player stores the user's
                 playerReadyTexts[i].text = Room.RoomPlayers[i].IsReady ?            //sets player if they are ready or not
                     "<color=green>Ready</color>" :                              //changes color depending if they are ready
                     "<color=red>Not Ready</color>";
-                //playerClassTexts[i].text = "(" + Room.RoomPlayers[i].CharacterClass + ")";          //sets character class
+                playerClassTexts[i].text = "(" + Room.RoomPlayers[i].CharacterClass + ")";          //sets character class
             }
 
             if (IsReady)
@@ -152,25 +149,18 @@ namespace TheCleansing.Lobby                   //a room player stores the user's
         public void CmdSetTank()                            //sets the class of the players, tank, healer, medic
         {
             CharacterClass = "Tank";
-            //selectUI.SetActive(false);
-            //readyUI.SetActive(true);            //activates ui because its ourselves and not others
-
         }
 
         [Command]
-        public void CmdSetSolider()
+        public void CmdSetSoldier()
         {
-            CharacterClass = "Solider";
-            //selectUI.SetActive(false);
-            //readyUI.SetActive(true);            //activates ui because its ourselves and not others
+            CharacterClass = "Soldier";
         }
 
         [Command]
         public void CmdSetMedic()
         {
             CharacterClass = "Medic";
-            //selectUI.SetActive(false);
-            //readyUI.SetActive(true);            //activates ui because its ourselves and not others
         }
 
         [Command]
