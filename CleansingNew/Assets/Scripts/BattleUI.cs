@@ -1,5 +1,6 @@
 using Mirror;
 using System;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -13,6 +14,7 @@ namespace TheCleansing.Lobby
         [Header("UIs")]
         [SerializeField] private GameObject battleUI = null;
         [SerializeField] private GameObject movesUI = null;
+        [SerializeField] private GameObject attackUI = null;
 
         //local player
         [Header("Local Player")]
@@ -30,6 +32,22 @@ namespace TheCleansing.Lobby
         public uint PlayerNetId { get; private set; }           //stores player net ID
         NetworkGamePlayer otherPlayer = null;                           //connected players are stored in variables
         NetworkGamePlayer localPlayer = null;
+
+        //Class Guns information
+        private string[] TankGuns = { "Ak47", "Shotgun", "RPG" };
+        private string[] SoldierGuns = { "M4", "PumpShotgun", "Sniper" };
+        private string[] MedicGuns = { "Pistol", "Smg", "MGrand" };
+        private Dictionary<string, int> gunDamgage = new Dictionary<string, int>() {
+            {"Ak47", 25},
+            {"Shotgun", 45},
+            {"RPG", 70},
+            {"M4", 25},
+            {"PumpShotgun", 40},
+            {"Sniper", 60},
+            {"Pistol", 15},
+            {"Smg", 20},
+            {"MGrand", 55},
+        };
 
         private NetworkManagerTC game;
         private NetworkManagerTC Game        //a way to reference game easliy
@@ -67,6 +85,37 @@ namespace TheCleansing.Lobby
             }
         }
 
+        public void setUpAttackButtons()                                                //changes the button names based on the character class
+        {
+            Debug.Log("Chaging button names");
+            Button[] buttons = attackUI.GetComponentsInChildren<Button>();
+            if(localPlayer.CharacterClass == "Tank")
+            {
+                for(int i = 0; i < TankGuns.Length; i++)                                      
+                {
+                    buttons[i].GetComponentInChildren<Text>().text = TankGuns[i];               //gets the text of the buttons and assigns to text of class gun names
+                }
+            }
+            else if (localPlayer.CharacterClass == "Soldier")
+            {
+                for (int i = 0; i < TankGuns.Length; i++)                                       
+                {
+                    buttons[i].GetComponentInChildren<Text>().text = SoldierGuns[i];
+                }
+            }
+            else if (localPlayer.CharacterClass == "Medic")
+            {
+                for (int i = 0; i < TankGuns.Length; i++)                                       
+                {
+                    buttons[i].GetComponentInChildren<Text>().text = MedicGuns[i];
+                }
+            }
+            else
+            {
+                Debug.Log("Error: " + localPlayer.CharacterClass);
+            }
+        }
+
         public void SetUpUI(Player player)          //sets the name of the players to UI
         {
             Debug.Log("Setup UI");
@@ -90,8 +139,9 @@ namespace TheCleansing.Lobby
                     playerName.text = Game.GamePlayers[i].PlayerName;
                     otherPlayer = Game.GamePlayers[i];
                 }
-            } 
+            }
             updateHealthDisplay();
+            setUpAttackButtons();
         }
 
         public void updateHealthDisplay()                //updates the display of health of players

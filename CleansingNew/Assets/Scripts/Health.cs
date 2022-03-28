@@ -6,9 +6,12 @@ namespace TheCleansing.Lobby
 {
     public class Health : NetworkBehaviour
     {
-        public int damage;
+        //Class Health
+        private float TankHP = 250;
+        private float SoldierHP = 200;
+        private float MedicHP = 150;
 
-        [SerializeField] private float MaxHP = 200;
+        private float MaxHP = 200;
 
         [SyncVar(hook = nameof(HandleHealthUpdated))]          //synced across the network and calls method whenever health is updated
         [SerializeField] private float health = 0;             //sync the health
@@ -30,8 +33,21 @@ namespace TheCleansing.Lobby
 
         public override void OnStartServer()            //when server starts, sets the health of players
         {
-            health = MaxHP;
             Debug.Log("Setting health");
+            if (gameObject.GetComponent<NetworkGamePlayer>().CharacterClass == "Tank")
+            {
+                MaxHP = TankHP;
+            } 
+            else if(gameObject.GetComponent<NetworkGamePlayer>().CharacterClass == "Soldier")
+            {
+                MaxHP = SoldierHP;
+            }
+            else
+            {
+                MaxHP = MedicHP;
+            }
+
+            health = MaxHP;
         }
 
         private void HandleHealthUpdated(float oldValue, float newValue)                //this method run whenever the health is changed
@@ -85,7 +101,9 @@ namespace TheCleansing.Lobby
             {
                 if(connectionToClient.connectionId == player.connectionToClient.connectionId)
                 {
-                    player.gameObject.SetActive(false);
+                    //player.gameObject.SetActive(false);
+                    Debug.Log(player + " is dead");
+                    //player.GetComponentInParent<MeshRenderer>().enabled = false;
                 }
             }
 
