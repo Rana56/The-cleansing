@@ -64,5 +64,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
-  playerPrefab: {fileID: 6981834177484083314, guid: dc97fffe056ac994ca19c9b06117aae1, type: 3}
-  UIprefab: {fileID: 1347215326762590758, guid: 9481e2b87b91da040aa9cfecf47a99dd, type: 3}
+  TankPrefab: {fileID: 6981834177484083314, guid: 0fdaa1e876b20f9408433273d8041d18, type: 3}
+  SoldierPrefab: {fileID: 6981834177484083314, guid: abd1edc01f7865842b92aca8afb1f49f, type: 3}
+  HealerPrefab: {fileID: 6981834177484083314, guid: e8cc2bb4221b5b341baeb08ef5a768e6, type: 3}

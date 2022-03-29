@@ -11,8 +11,8 @@ namespace TheCleansing.Lobby
         private float SoldierHP = 200;
         private float MedicHP = 150;
 
-        private float MaxHP = 200;
-
+        [SyncVar]
+        private float MaxHP;
         [SyncVar(hook = nameof(HandleHealthUpdated))]          //synced across the network and calls method whenever health is updated
         [SerializeField] private float health = 0;             //sync the health
 
@@ -31,20 +31,27 @@ namespace TheCleansing.Lobby
             }
         }
 
-        public override void OnStartServer()            //when server starts, sets the health of players
+        public override void OnStartServer()            //when server starts, sets the health of players based on class
         {
             Debug.Log("Setting health");
             if (gameObject.GetComponent<NetworkGamePlayer>().CharacterClass == "Tank")
             {
+                Debug.Log("Tank Max Health");
                 MaxHP = TankHP;
             } 
             else if(gameObject.GetComponent<NetworkGamePlayer>().CharacterClass == "Soldier")
             {
+                Debug.Log("Soldier Max Health");
                 MaxHP = SoldierHP;
+            }
+            else if (gameObject.GetComponent<NetworkGamePlayer>().CharacterClass == "Medic")
+            {
+                Debug.Log("Medic Max Health");
+                MaxHP = MedicHP;
             }
             else
             {
-                MaxHP = MedicHP;
+                Debug.Log("Error class: " + gameObject.GetComponent<NetworkGamePlayer>().CharacterClass);
             }
 
             health = MaxHP;
@@ -73,7 +80,24 @@ namespace TheCleansing.Lobby
 
             if (health == 0)
             {
-                RpcHandleDeath();
+                Player[] players = GameObject.FindObjectsOfType<Player>();
+                foreach(Player player in players)
+                {
+                    if (player.hasAuthority) { 
+                        Debug.Log(player.connectionToClient.connectionId + " - Player Dead");
+                        player.gameObject.GetComponentInChildren<MeshRenderer>().enabled = false;
+                    }
+                }
+
+                foreach (NetworkGamePlayer user in Game.GamePlayers)
+                {
+                    if (user.gameObject.name != "LocalGamePlayer")
+                    {
+                        user.IncrementScore();
+                        break;
+                    }
+                }
+                //RpcHandleDeath();
             }
         }
 
@@ -91,13 +115,26 @@ namespace TheCleansing.Lobby
         }
 
         [ClientRpc]                                         //when player dies, it will turn off its game object
-        private void RpcHandleDeath()                       //method called on server and run on clients
+        private void RpcHandleDeath(Player player)                       //method called on server and run on clients
         {
             //gameObject.SetActive(false);  
-            //GameObject.Find("LocalPlayer").SetActive(false);            //turns off the player game object
+            //GameObject.Find("LocalPlayer").GetComponentInParent<MeshRenderer>().enabled = false;            //turns off the player game object
             //TODO despawn player object
             Debug.Log("Despawn Player object");
-            foreach(Player player in Game.SpawnedGamePlayers)
+            Debug.Log(connectionToClient.connectionId);
+
+            player.gameObject.GetComponentInChildren<MeshRenderer>().enabled = false;
+
+            foreach(NetworkGamePlayer user in Game.GamePlayers)
+            {
+                if(user.gameObject.name != "LocalGamePlayer")
+                {
+                    user.IncrementScore();
+                }
+            }
+
+            /*
+            foreach (Player player in Game.SpawnedGamePlayers)
             {
                 if(connectionToClient.connectionId == player.connectionToClient.connectionId)
                 {
@@ -105,8 +142,9 @@ namespace TheCleansing.Lobby
                     Debug.Log(player + " is dead");
                     //player.GetComponentInParent<MeshRenderer>().enabled = false;
                 }
+                
             }
-
+            */
         }
 
         public float getHp()
@@ -117,6 +155,11 @@ namespace TheCleansing.Lobby
         public void resetHealth()
         {
             health = MaxHP;
+        }
+
+        public float getMaxHealth()
+        {
+            return MaxHP;
         }
 
         public string toString()

@@ -13,7 +13,7 @@ namespace TheCleansing.Lobby
 
         private static event Action<string> OnMessage;                      //even raised when user starts writing
         private String localPlayer = "";
-
+        
         private NetworkManagerTC game;
         private NetworkManagerTC Game        //a way to reference room easliy
         {
@@ -32,20 +32,25 @@ namespace TheCleansing.Lobby
             OnMessage += HandleNewMessage;                  //subsribe to event, handleNewMessage called every time onMessage invoked
         }
 
-        public override void OnStartClient()
+        public string setUpLocalName()
         {
+            if(localPlayer != "") { return localPlayer; }
+
             Debug.Log("Chat Client Started");
-            
-            
-            for (int i = 0; i < Game.GamePlayers.Count; i++)                        //loops over the list of game players (the connected players), then checks if they are a local player.
+            for (int i = 0; i < Game.GamePlayers.Count; i++)                                //loops over the list of game players (the connected players), then checks if they are a local player.
             {
-                Debug.Log(Game.GamePlayers[i]);
                 if (connectionToClient.connectionId == Game.GamePlayers[i].ConnectionId)                       //checks if connection to client matches network game player
                 {
-                    this.localPlayer = Game.GamePlayers[i].PlayerName;           //sets the name of the local player
-                    Debug.Log(this.localPlayer);
+                    this.localPlayer = Game.GamePlayers[i].PlayerName;                          //sets the name of the local player
+                    Debug.Log(this.localPlayer + " - " + Game.GamePlayers[i].ConnectionId + " - " +Game.GamePlayers[i].PlayerName);
+                }
+                else
+                {
+                    Debug.Log("Not local player");
                 }
             }
+
+            return localPlayer;
         }
 
         [ClientCallback]
@@ -76,7 +81,7 @@ namespace TheCleansing.Lobby
         [Command]
         private void CmdSendMessage(string message)                                     //sends message to server, called by client, run on server
         {
-            RpcHandleMessage($"[{localPlayer}]: {message}");            //formats message, connectionToClient.connectionId
+            RpcHandleMessage($"[{setUpLocalName()}]: {message}");            //formats message, connectionToClient.connectionId
         }
 
         [ClientRpc]                                                 //called on server, run on clients

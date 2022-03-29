@@ -4,6 +4,9 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
+using System.Linq;
+using Random = System.Random;
 
 //script attached to player, wiil be spawned when player spawned
 
@@ -20,13 +23,16 @@ namespace TheCleansing.Lobby
         [Header("Local Player")]
         [SerializeField] private TMP_Text localName = null;          //used for show player name
         [SerializeField] private TMP_Text localHealth = null;          //used for show player health
+        [SerializeField] private TMP_Text localScore = null;          //used for show player score
         private GameObject playerScriptObject;
 
         //other player
         [Header("Other Player")]
         [SerializeField] private TMP_Text playerName = null;          //used for show player name
         [SerializeField] private TMP_Text playerHealth = null;          //used for show player health
+        [SerializeField] private TMP_Text playerScore = null;
 
+        [Header("Other Info")]
         //player information
         [SerializeField] private TMP_Text info_text = null;
         public uint PlayerNetId { get; private set; }           //stores player net ID
@@ -37,7 +43,7 @@ namespace TheCleansing.Lobby
         private string[] TankGuns = { "Ak47", "Shotgun", "RPG" };
         private string[] SoldierGuns = { "M4", "PumpShotgun", "Sniper" };
         private string[] MedicGuns = { "Pistol", "Smg", "MGrand" };
-        private Dictionary<string, int> gunDamgage = new Dictionary<string, int>() {
+        private Dictionary<string, float> gunDamgage = new Dictionary<string, float>() {
             {"Ak47", 25},
             {"Shotgun", 45},
             {"RPG", 70},
@@ -81,7 +87,14 @@ namespace TheCleansing.Lobby
             Button[] buttons = movesUI.GetComponentsInChildren<Button>();           //gets all the buttons in panel 
             foreach (Button button in buttons)                                       //loops through the buttons and makes it not interatable
             {
-                button.interactable = true;                        //makes button not interactable
+                if (button.GetComponentInChildren<Text>().text == "Special")
+                {
+                    button.interactable = false;
+                }
+                else
+                {
+                    button.interactable = true;                        //makes button not interactable
+                }
             }
         }
 
@@ -112,7 +125,7 @@ namespace TheCleansing.Lobby
             }
             else
             {
-                Debug.Log("Error: " + localPlayer.CharacterClass);
+                Debug.Log("Error setupAttackButtons: " + localPlayer.CharacterClass);
             }
         }
 
@@ -128,6 +141,7 @@ namespace TheCleansing.Lobby
                 Health health = Game.GamePlayers[i].GetComponentInParent<Health>();
                 health.OnHealthChanged += updateHealthDisplay;                                      //subscribes to event, when event invoked, method run
                 Game.GamePlayers[i].UpdateReady += readyCheck;
+                Game.GamePlayers[i].ScoreChange += updateScoreDisplay;
 
                 if (Game.GamePlayers[i].name.Equals("LocalGamePlayer"))
                 {
@@ -141,6 +155,7 @@ namespace TheCleansing.Lobby
                 }
             }
             updateHealthDisplay();
+            updateScoreDisplay();
             setUpAttackButtons();
         }
 
@@ -164,11 +179,39 @@ namespace TheCleansing.Lobby
             }
         }
 
+        public void updateScoreDisplay()                //updates the display of score of players
+        {
+            Debug.Log("Updating Health");
+            for (int i = 0; i < Game.GamePlayers.Count; i++)
+            {
+                if (Game.GamePlayers[i].name.Equals("LocalGamePlayer"))
+                {
+                    localScore.text = Game.GamePlayers[i].score.ToString();                //If it's true, the player score is assigned to appropriate text
+                }
+                else
+                {
+                    playerScore.text = Game.GamePlayers[i].score.ToString();
+                }
+
+            }
+        }
+
         public void Attack()            //attacks opponent
         {
             Debug.Log("Attack health");                                                     //gets health script attched to NetworkGamePlayer
             Health health = localPlayer.GetComponentInParent<Health>();                     //changes player health, doesn't change own health
-            health.AttackPlayer(20, otherPlayer);                                           //local payer calls command
+            String buttonName = EventSystem.current.currentSelectedGameObject.GetComponentInChildren<Text>().text;         //gets the name of the button pressed
+
+            float value;
+            bool hasValue = gunDamgage.TryGetValue(buttonName, out value);                  //searches dictionary for gun and returns the damage
+            if (hasValue)
+            {
+                health.AttackPlayer(value, otherPlayer);                                           //local payer calls command
+            }
+            else
+            {
+                Debug.Log(buttonName + " - not in Gun dictionary");
+            }
 
             localPlayer.CmdReadyUp();                                                       //readies local player
             deactivateMovesUI();
@@ -178,7 +221,59 @@ namespace TheCleansing.Lobby
         {
             Debug.Log("Heal");
             Health health = localPlayer.GetComponentInParent<Health>();                     //gets health script attched to NetworkGamePlayer
-            health.HealPlayer(5);                                                          //changes player health, doesn't change own health
+            
+            if(localPlayer.CharacterClass == "Tank")                                        //changes heal based on class
+            {
+                health.HealPlayer(5);                                                          //changes player health, doesn't change own health
+            }
+            else if(localPlayer.CharacterClass == "Soldier")
+            {
+                health.HealPlayer(10);
+            } 
+            else if(localPlayer.CharacterClass == "Medic")
+            {
+                health.HealPlayer(20);
+            }
+            else
+            {
+                Debug.Log("Error heal: " + localPlayer.CharacterClass);
+            }
+            
+            localPlayer.CmdReadyUp();                                                       //readies local player
+            deactivateMovesUI();
+        }
+
+        public void Special()
+        {
+            Debug.Log("Special");
+
+            Random random = new Random();
+            Health health = localPlayer.GetComponentInParent<Health>();                     //gets health script attched to NetworkGamePlayer
+
+            if (localPlayer.CharacterClass == "Tank")                                        //special of tank, gets random gun and multiplies damage
+            {
+                Debug.Log("Special Tank");
+                int index = random.Next(gunDamgage.Count);                                 //gets index based on size of gun dictionary
+
+                List<float> damage = new List<float>(gunDamgage.Values);                    //creates a list based on key set
+
+                health.AttackPlayer(damage[index] * 2, otherPlayer);
+                Debug.Log(damage[index]);
+            }
+            else if (localPlayer.CharacterClass == "Soldier")
+            {
+                Debug.Log("Special Soldier");
+                health.AttackPlayer(70, otherPlayer);                                                       //special of soldier, does 
+            }
+            else if (localPlayer.CharacterClass == "Medic")
+            {
+                Debug.Log("Special Medic");
+                health.HealPlayer(localPlayer.GetComponentInParent<Health>().getMaxHealth() / 2);               //gets the max health of medic and heals themselves
+            }
+            else
+            {
+                Debug.Log("Error special: " + localPlayer.CharacterClass);
+            }
 
             localPlayer.CmdReadyUp();                                                       //readies local player
             deactivateMovesUI();
@@ -222,6 +317,7 @@ namespace TheCleansing.Lobby
                 Health health = Game.GamePlayers[i].GetComponentInParent<Health>();
                 health.OnHealthChanged -= updateHealthDisplay;
                 Game.GamePlayers[i].UpdateReady -= readyCheck;
+                Game.GamePlayers[i].ScoreChange -= updateScoreDisplay;
             }
         }
 
@@ -239,6 +335,12 @@ namespace TheCleansing.Lobby
                 Debug.Log("Acctiviating move UI");
                 activateMovesUI();
             }
+
+        BattleUI[] moveUIs = FindObjectsOfType<BattleUI>();        //gets all the battle UI and activates it again
+        foreach (BattleUI ui in moveUIs)
+        {
+            ui.activateMovesUI();                   //TODO Fix doesn't work for other clients
+        }
         */
         #endregion
     }
