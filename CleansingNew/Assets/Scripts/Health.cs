@@ -85,6 +85,16 @@ namespace TheCleansing.Lobby
                 {
                     if (player.hasAuthority) { 
                         Debug.Log(player.connectionToClient.connectionId + " - Player Dead");
+                        player.gameObject.GetComponentInChildren<MeshRenderer>().enabled = false;
+                    }
+                }
+
+                foreach (NetworkGamePlayer user in Game.GamePlayers)
+                {
+                    if (user.gameObject.name != "LocalGamePlayer")
+                    {
+                        user.IncrementScore();
+                        break;
                     }
                 }
                 //RpcHandleDeath();
@@ -105,14 +115,24 @@ namespace TheCleansing.Lobby
         }
 
         [ClientRpc]                                         //when player dies, it will turn off its game object
-        private void RpcHandleDeath()                       //method called on server and run on clients
+        private void RpcHandleDeath(Player player)                       //method called on server and run on clients
         {
             //gameObject.SetActive(false);  
             //GameObject.Find("LocalPlayer").GetComponentInParent<MeshRenderer>().enabled = false;            //turns off the player game object
             //TODO despawn player object
             Debug.Log("Despawn Player object");
             Debug.Log(connectionToClient.connectionId);
-            
+
+            player.gameObject.GetComponentInChildren<MeshRenderer>().enabled = false;
+
+            foreach(NetworkGamePlayer user in Game.GamePlayers)
+            {
+                if(user.gameObject.name != "LocalGamePlayer")
+                {
+                    user.IncrementScore();
+                }
+            }
+
             /*
             foreach (Player player in Game.SpawnedGamePlayers)
             {

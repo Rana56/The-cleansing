@@ -141,6 +141,7 @@ namespace TheCleansing.Lobby
                 Health health = Game.GamePlayers[i].GetComponentInParent<Health>();
                 health.OnHealthChanged += updateHealthDisplay;                                      //subscribes to event, when event invoked, method run
                 Game.GamePlayers[i].UpdateReady += readyCheck;
+                Game.GamePlayers[i].ScoreChange += updateScoreDisplay;
 
                 if (Game.GamePlayers[i].name.Equals("LocalGamePlayer"))
                 {
@@ -316,6 +317,7 @@ namespace TheCleansing.Lobby
                 Health health = Game.GamePlayers[i].GetComponentInParent<Health>();
                 health.OnHealthChanged -= updateHealthDisplay;
                 Game.GamePlayers[i].UpdateReady -= readyCheck;
+                Game.GamePlayers[i].ScoreChange -= updateScoreDisplay;
             }
         }
 

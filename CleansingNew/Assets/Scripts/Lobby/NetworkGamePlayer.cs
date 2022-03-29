@@ -15,12 +15,15 @@ namespace TheCleansing.Lobby                   //a room player stores the user's
         public int PlayerNumber;                    //used to track who is player 1 and 2
         [SyncVar (hook = nameof(HandleReadyChange))]
         public bool IsReady = false;                        //checks if the player is ready
-        [SyncVar]
+        [SyncVar (hook = nameof(HandleScoreChange))]
         public int score;
+
+
         [SyncVar]
         public string CharacterClass;
 
         public event Action UpdateReady;
+        public event Action ScoreChange;
 
         private NetworkManagerTC game;
         private NetworkManagerTC Game        //a way to reference room easliy
@@ -57,10 +60,16 @@ namespace TheCleansing.Lobby                   //a room player stores the user's
             }*/
         }
 
-        private void HandleReadyChange(bool oldValue, bool newValue)
+        private void HandleReadyChange(bool oldValue, bool newValue)            //invoked when ready changed
         {
             Debug.Log("Invoke ready up");
             UpdateReady?.Invoke();
+        }
+
+        private void HandleScoreChange(int oldValue, int newValue)                            //invoked when score changed
+        {
+            Debug.Log("Invoke Score Change");
+            ScoreChange?.Invoke();
         }
 
         [Command]

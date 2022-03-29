@@ -8,8 +8,9 @@ namespace TheCleansing.Lobby
     public class PlayerSpawnSystem : NetworkBehaviour                   //spawn system created by the server, when spawning to a scene a game object with this scripte will be spawned
     {
         [SerializeField] private GameObject TankPrefab = null; 
-        [SerializeField] private GameObject SoliderPrefab = null;
+        [SerializeField] private GameObject SoldierPrefab = null;
         [SerializeField] private GameObject HealerPrefab = null;
+
         private GameObject playerPrefab = null;        //the prefab that will spawn, assigned to a connection
         private static List<Transform> spawnPoints = new List<Transform>();         //stores the posisitions in the scene, transform - position, rotation, scale
 
@@ -54,14 +55,17 @@ namespace TheCleansing.Lobby
             if(Class == "Tank")
             {
                 playerPrefab = TankPrefab;
-            }else if(Class == "Solider")
+            }
+            else if(Class == "Soldier")
             {
-                playerPrefab= SoliderPrefab;
-            }else if(Class == "Medic")
+                playerPrefab = SoldierPrefab;
+            }
+            else if(Class == "Medic")
             {
                 playerPrefab = HealerPrefab;
             }
         }
+
         public static void RemoveSpawnPoint(Transform transform) => spawnPoints.Remove(transform);          //removes spawn point
 
         public override void OnStartServer() => NetworkManagerTC.OnServerReadied += SpawnPlayer;         //when this game object starts existing on the server, the object is subscribed to the onserverReadied event
@@ -79,6 +83,7 @@ namespace TheCleansing.Lobby
                 Debug.LogError($"Missing spawn point for player {nextIndex}");
                 return;
             }
+
             ChooseClass(getLocalPlayerClass());
             GameObject playerInstance = Instantiate(playerPrefab, spawnPoints[nextIndex].position, spawnPoints[nextIndex].rotation);           //spawns in the player, instantiates the prefab, spawns it at the position from spawnPoints facing a certian direction (rotation)
             
