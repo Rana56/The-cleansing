@@ -23,13 +23,16 @@ namespace TheCleansing.Lobby
         [Header("Local Player")]
         [SerializeField] private TMP_Text localName = null;          //used for show player name
         [SerializeField] private TMP_Text localHealth = null;          //used for show player health
+        [SerializeField] private TMP_Text localScore = null;          //used for show player score
         private GameObject playerScriptObject;
 
         //other player
         [Header("Other Player")]
         [SerializeField] private TMP_Text playerName = null;          //used for show player name
         [SerializeField] private TMP_Text playerHealth = null;          //used for show player health
+        [SerializeField] private TMP_Text playerScore = null;
 
+        [Header("Other Info")]
         //player information
         [SerializeField] private TMP_Text info_text = null;
         public uint PlayerNetId { get; private set; }           //stores player net ID
@@ -151,6 +154,7 @@ namespace TheCleansing.Lobby
                 }
             }
             updateHealthDisplay();
+            updateScoreDisplay();
             setUpAttackButtons();
         }
 
@@ -169,6 +173,23 @@ namespace TheCleansing.Lobby
                 else
                 {
                     playerHealth.text = health.toString();
+                }
+
+            }
+        }
+
+        public void updateScoreDisplay()                //updates the display of score of players
+        {
+            Debug.Log("Updating Health");
+            for (int i = 0; i < Game.GamePlayers.Count; i++)
+            {
+                if (Game.GamePlayers[i].name.Equals("LocalGamePlayer"))
+                {
+                    localScore.text = Game.GamePlayers[i].score.ToString();                //If it's true, the player score is assigned to appropriate text
+                }
+                else
+                {
+                    playerScore.text = Game.GamePlayers[i].score.ToString();
                 }
 
             }
@@ -312,6 +333,12 @@ namespace TheCleansing.Lobby
                 Debug.Log("Acctiviating move UI");
                 activateMovesUI();
             }
+
+        BattleUI[] moveUIs = FindObjectsOfType<BattleUI>();        //gets all the battle UI and activates it again
+        foreach (BattleUI ui in moveUIs)
+        {
+            ui.activateMovesUI();                   //TODO Fix doesn't work for other clients
+        }
         */
         #endregion
     }

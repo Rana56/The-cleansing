@@ -80,7 +80,14 @@ namespace TheCleansing.Lobby
 
             if (health == 0)
             {
-                RpcHandleDeath();
+                Player[] players = GameObject.FindObjectsOfType<Player>();
+                foreach(Player player in players)
+                {
+                    if (player.hasAuthority) { 
+                        Debug.Log(player.connectionToClient.connectionId + " - Player Dead");
+                    }
+                }
+                //RpcHandleDeath();
             }
         }
 
@@ -101,22 +108,23 @@ namespace TheCleansing.Lobby
         private void RpcHandleDeath()                       //method called on server and run on clients
         {
             //gameObject.SetActive(false);  
-            //GameObject.Find("LocalPlayer").SetActive(false);            //turns off the player game object
+            //GameObject.Find("LocalPlayer").GetComponentInParent<MeshRenderer>().enabled = false;            //turns off the player game object
             //TODO despawn player object
             Debug.Log("Despawn Player object");
             Debug.Log(connectionToClient.connectionId);
+            
+            /*
             foreach (Player player in Game.SpawnedGamePlayers)
             {
-                /*
                 if(connectionToClient.connectionId == player.connectionToClient.connectionId)
                 {
                     //player.gameObject.SetActive(false);
                     Debug.Log(player + " is dead");
                     //player.GetComponentInParent<MeshRenderer>().enabled = false;
-                }*/
-                Debug.Log(player);
+                }
+                
             }
-
+            */
         }
 
         public float getHp()
