@@ -177,13 +177,15 @@ namespace TheCleansing.Lobby
                 {
                     ui.activateMovesUI();                   //TODO Fix doesn't work for other clients
                 }*/
-
+                //animator.SetBool("IsShooting", false);
             }
             else if (newGamePhase == "Animation")
             {
                 Debug.Log("Animations...");
                 //Animation function
                 //TODO timer - waits for a few seconds
+                //animator.SetBool("IsShooting", true);
+
                 ChangeGamePhase("Move Selection");                   //changes game phase back to move 
             }
             else
@@ -273,6 +275,8 @@ namespace TheCleansing.Lobby
             }
         }
         
+
+        //TODO have function that counts how many times both players false, after 5 turns enable special, mod 5 = 0
     }
 }
 

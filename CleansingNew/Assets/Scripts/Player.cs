@@ -11,6 +11,7 @@ namespace TheCleansing.Lobby
     public class Player : NetworkBehaviour                //physical player in game
     {
         [SerializeField] private GameObject battleUI = null;            //UI Object
+        [SerializeField] private Animator animator = null;                      //the animator for the characters
         private BattleUI localUI;
 
         //[SyncVar(hook = nameof(HandleOwnerSet))]
@@ -39,7 +40,9 @@ namespace TheCleansing.Lobby
 
                 localUI = playerUI.GetComponent<BattleUI>();
                 localUI.activateUI();
-                localUI.SetUpUI(this);
+                localUI.SetUpUI(this, animator);
+                Debug.Log("Animator");
+                animator.SetBool("IsShooting", true);
             }
 
             Game.SpawnedGamePlayers.Add(this);                      //adds this player instance to list so all players can be referenced
