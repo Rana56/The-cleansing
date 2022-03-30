@@ -1,6 +1,7 @@
 using Mirror;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -12,15 +13,19 @@ namespace TheCleansing.Lobby
         [SerializeField] private int minPlayers = 2;                        //minimum players needed to start game
         [Scene] [SerializeField] private string menuScene = string.Empty;       //scene reference
 
+        [Header("Maps")]                                                            //maps controller
+        [SerializeField] private int numberOfRounds = 3;
+        [SerializeField] private MapSet mapSet = null;
+        
         [Header("Room")]
         [SerializeField] private NetworkLobbyPlayer roomPlayerPrefab = null;             //reference to network room player
-                                                                                             //[SerializeField] string menuScene;
 
         [Header("Game")]
         [SerializeField] private NetworkGamePlayer gamePlayerPrefab = null;
         [SerializeField] private GameObject playerSpawnSystem = null;                   //gameobject with the player spawn system
         [SerializeField] private GameObject gameManager = null;
 
+        private MapSystem mapSystem;
         public string CurrentGamePhase;                                             //game phase that checks if its attacking or animations time 
         
         public static event Action OnClientConnected;
@@ -219,14 +224,16 @@ namespace TheCleansing.Lobby
             {
                 if (!IsReadyToStart()) { return; }                  //checks if everyone is ready
 
-                ServerChangeScene("Map_1");                 //changes scene
+                mapSystem = new MapSystem(mapSet, numberOfRounds);          //creates map system
+
+                ServerChangeScene(mapSystem.NextMap);                 //changes scene, by calling next map, random map returned
             }
         }
 
         public override void ServerChangeScene(string newSceneName)                 //method handles scene change, e.g. going to a game, going out of game
         {
-            // From menu to game
-            if (SceneManager.GetActiveScene().path == menuScene && newSceneName.StartsWith("Map_"))            //checks if current scene is the menu and if the new scene matches the string - going from the main menu to the game
+            // From menu to game - newSceneName.StartsWith("Map_")
+            if (SceneManager.GetActiveScene().path == menuScene && Path.GetFileName(newSceneName).StartsWith("Map_"))            //checks if current scene is the menu and if the new scene matches the string - going from the main menu to the game
             {
                 for (int i = RoomPlayers.Count - 1; i >= 0; i--)                    //when going from menu to game, goes trough all the room players
                 {
@@ -265,7 +272,7 @@ namespace TheCleansing.Lobby
         
         public override void OnServerSceneChanged(string newSceneName)               //called on the server, when a scene is completed
         {                                                                           //when the scene is loaded, actions can start on the scene
-            if (newSceneName.StartsWith("Map_"))
+            if (Path.GetFileName(newSceneName).StartsWith("Map_"))
             {                           //checks if it is one of the levels   
                 GameObject playerSpawnSystemInstance = Instantiate(playerSpawnSystem);              //spwans the player spawn system, connection not passed as parameter, so the server owns it
                 NetworkServer.Spawn(playerSpawnSystemInstance);                 //all clients has a spawn system and is owned by the server
