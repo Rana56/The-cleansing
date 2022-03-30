@@ -12,6 +12,7 @@ namespace TheCleansing.Lobby
     {
         [SerializeField] private GameObject battleUI = null;            //UI Object
         [SerializeField] private Animator animator = null;                      //the animator for the characters
+
         private BattleUI localUI;
 
         //[SyncVar(hook = nameof(HandleOwnerSet))]
