@@ -27,7 +27,8 @@ namespace TheCleansing.Lobby
 
         private MapSystem mapSystem;
         public string CurrentGamePhase;                                             //game phase that checks if its attacking or animations time 
-        
+        private int playerTurns = 0;
+
         public static event Action OnClientConnected;
         public static event Action OnClientDisconnected;
         public static event Action<NetworkConnection> OnServerReadied;          //used to know if everyone has connected to the game and is ready to start on the server, include a timeout if someone disconnects
@@ -174,14 +175,20 @@ namespace TheCleansing.Lobby
             {
                 Debug.Log("Moves Selection");
                 //end move selection
+                Debug.Log("Player turns: " + playerTurns);
+
+                if(playerTurns % 5 == 0)                                    //after 5 turns, special will activate
+                {
+                    Debug.Log("5 turns");
+                    BattleUI[] moveUIs = FindObjectsOfType<BattleUI>();        //gets all the battle UI and activates it again
+                    foreach (BattleUI ui in moveUIs)
+                    {
+                        ui.activateSpecial();               
+                    }
+                }
+
                 SetGameReadyFalse();                                        //gameplayers set to false
 
-                /*
-                BattleUI[] moveUIs = FindObjectsOfType<BattleUI>();        //gets all the battle UI and activates it again
-                foreach (BattleUI ui in moveUIs)
-                {
-                    ui.activateMovesUI();                   //TODO Fix doesn't work for other clients
-                }*/
                 //animator.SetBool("IsShooting", false);
             }
             else if (newGamePhase == "Animation")
@@ -203,6 +210,7 @@ namespace TheCleansing.Lobby
         {
             if (IsReadyToAction())                      //loops through all the players to see if they are ready to start
             {
+                playerTurns++;
                 Debug.Log("Change to animation phase");             //does animations one all players are ready
                 ChangeGamePhase("Animation");
             }

@@ -99,6 +99,19 @@ namespace TheCleansing.Lobby
             }
         }
 
+        public void activateSpecial()
+        {
+            Debug.Log("Activate special");
+            Button[] buttons = movesUI.GetComponentsInChildren<Button>();           //gets all the buttons in panel 
+            foreach (Button button in buttons)                                       //loops through the buttons and makes it not interatable
+            {
+                if (button.GetComponentInChildren<Text>().text == "Special")
+                {
+                    button.interactable = true;
+                }
+            }
+        }
+
         public void setUpAttackButtons()                                                //changes the button names based on the character class
         {
             Debug.Log("Chaging button names");
