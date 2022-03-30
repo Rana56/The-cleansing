@@ -25,6 +25,7 @@ namespace TheCleansing.Lobby
         [SerializeField] private TMP_Text localHealth = null;          //used for show player health
         [SerializeField] private TMP_Text localScore = null;          //used for show player score
         private GameObject playerScriptObject;
+        Animator playerAnimator;
 
         //other player
         [Header("Other Player")]
@@ -98,6 +99,19 @@ namespace TheCleansing.Lobby
             }
         }
 
+        public void activateSpecial()
+        {
+            Debug.Log("Activate special");
+            Button[] buttons = movesUI.GetComponentsInChildren<Button>();           //gets all the buttons in panel 
+            foreach (Button button in buttons)                                       //loops through the buttons and makes it not interatable
+            {
+                if (button.GetComponentInChildren<Text>().text == "Special")
+                {
+                    button.interactable = true;
+                }
+            }
+        }
+
         public void setUpAttackButtons()                                                //changes the button names based on the character class
         {
             Debug.Log("Chaging button names");
@@ -129,12 +143,13 @@ namespace TheCleansing.Lobby
             }
         }
 
-        public void SetUpUI(Player player)          //sets the name of the players to UI
+        public void SetUpUI(Player player, Animator animator)          //sets the name of the players to UI
         {
             Debug.Log("Setup UI");
             playerScriptObject = player.gameObject;                                     //UI stores the game object that the player script is attached to
             PlayerNetId = player.netId;         //stores the net id of player
             Debug.Log("NetID: " + PlayerNetId);
+            playerAnimator = animator;
 
             for (int i = 0; i < Game.GamePlayers.Count; i++)                        //loops over the list of game players (the connected players), then checks if they are a local player.
             {
@@ -290,7 +305,7 @@ namespace TheCleansing.Lobby
             {
                 Debug.Log("Both player ready");
                 info_text.text = "";
-
+                //playerAnimator.SetBool("IsShooting", true);
             } 
             else if (!localPlayer.IsReady && !otherPlayer.IsReady){
                 info_text.text = "Select your move";
@@ -300,13 +315,14 @@ namespace TheCleansing.Lobby
             {
                 info_text.text = "Select your move";                                       
                 activateMovesUI();
+                //playerAnimator.SetBool("IsShooting", false);
                 /*
                 BattleUI[] moveUIs = FindObjectsOfType<BattleUI>();        //gets all the battle UI and activates it again
                 foreach (BattleUI ui in moveUIs)
                 {
                     ui.activateMovesUI();                   //TODO Fix doesn't work for other clients
                 }*/
-                                                             //activates move ui, i.e. both players' ready is false            
+                //activates move ui, i.e. both players' ready is false            
             }
         }
 

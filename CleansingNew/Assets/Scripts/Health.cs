@@ -80,6 +80,7 @@ namespace TheCleansing.Lobby
 
             if (health == 0)
             {
+                /**
                 Player[] players = GameObject.FindObjectsOfType<Player>();
                 foreach(Player player in players)
                 {
@@ -87,7 +88,7 @@ namespace TheCleansing.Lobby
                         Debug.Log(player.connectionToClient.connectionId + " - Player Dead");
                         player.gameObject.GetComponentInChildren<MeshRenderer>().enabled = false;
                     }
-                }
+                }*/
 
                 foreach (NetworkGamePlayer user in Game.GamePlayers)
                 {
@@ -97,6 +98,7 @@ namespace TheCleansing.Lobby
                         break;
                     }
                 }
+                resetHealth();
                 //RpcHandleDeath();
             }
         }
@@ -115,21 +117,29 @@ namespace TheCleansing.Lobby
         }
 
         [ClientRpc]                                         //when player dies, it will turn off its game object
-        private void RpcHandleDeath(Player player)                       //method called on server and run on clients
+        private void RpcHandleDeath()                       //method called on server and run on clients
         {
             //gameObject.SetActive(false);  
             //GameObject.Find("LocalPlayer").GetComponentInParent<MeshRenderer>().enabled = false;            //turns off the player game object
             //TODO despawn player object
             Debug.Log("Despawn Player object");
-            Debug.Log(connectionToClient.connectionId);
 
-            player.gameObject.GetComponentInChildren<MeshRenderer>().enabled = false;
-
-            foreach(NetworkGamePlayer user in Game.GamePlayers)
+            Player[] players = GameObject.FindObjectsOfType<Player>();
+            foreach (Player player in players)
             {
-                if(user.gameObject.name != "LocalGamePlayer")
+                if (player.hasAuthority)
+                {
+                    Debug.Log(player.connectionToClient.connectionId + " - Player Dead");
+                    player.gameObject.GetComponentInChildren<MeshRenderer>().enabled = false;
+                }
+            }
+
+            foreach (NetworkGamePlayer user in Game.GamePlayers)
+            {
+                if (user.gameObject.name != "LocalGamePlayer")
                 {
                     user.IncrementScore();
+                    break;
                 }
             }
 
