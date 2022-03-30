@@ -292,7 +292,7 @@ namespace TheCleansing.Lobby
             {
                 Debug.Log("Both player ready");
                 info_text.text = "";
-                playerAnimator.SetBool("IsShooting", true);
+                //playerAnimator.SetBool("IsShooting", true);
             } 
             else if (!localPlayer.IsReady && !otherPlayer.IsReady){
                 info_text.text = "Select your move";
@@ -302,7 +302,7 @@ namespace TheCleansing.Lobby
             {
                 info_text.text = "Select your move";                                       
                 activateMovesUI();
-                playerAnimator.SetBool("IsShooting", false);
+                //playerAnimator.SetBool("IsShooting", false);
                 /*
                 BattleUI[] moveUIs = FindObjectsOfType<BattleUI>();        //gets all the battle UI and activates it again
                 foreach (BattleUI ui in moveUIs)

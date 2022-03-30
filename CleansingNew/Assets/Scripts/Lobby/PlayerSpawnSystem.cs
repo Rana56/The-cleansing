@@ -32,16 +32,23 @@ namespace TheCleansing.Lobby
             spawnPoints = spawnPoints.OrderBy(x => x.GetSiblingIndex()).ToList();           //makes sure the order is correct
         }
 
-        string getLocalPlayerClass()
+        public string getLocalPlayerClass(NetworkConnection conn)
         {
-            TheCleansing.Lobby.NetworkGamePlayer SelectedPlayer = null;
+            NetworkGamePlayer SelectedPlayer = null;
             string  SelectedClass = null;
+
             for (int i = 0; i < Game.GamePlayers.Count; i++)
             {
-                if (Game.GamePlayers[i].name.Equals("LocalGamePlayer"))
+                Debug.Log(Game.GamePlayers[i].ConnectionId + "+ Connection id");
+                Debug.Log(conn.connectionId + "conn connection id");
+                if (Game.GamePlayers[i].ConnectionId == conn.connectionId)
                 {
                     SelectedPlayer = Game.GamePlayers[i];
                     break;
+                }
+                else
+                {
+                    Debug.Log("Not player");
                 }
 
             }
@@ -50,8 +57,8 @@ namespace TheCleansing.Lobby
             return SelectedClass;
         }
             
-         void ChooseClass(string Class)
-        {
+         public void ChooseClass(string Class)
+         {
             if(Class == "Tank")
             {
                 playerPrefab = TankPrefab;
@@ -84,7 +91,7 @@ namespace TheCleansing.Lobby
                 return;
             }
 
-            ChooseClass(getLocalPlayerClass());
+            ChooseClass(getLocalPlayerClass(conn));
             GameObject playerInstance = Instantiate(playerPrefab, spawnPoints[nextIndex].position, spawnPoints[nextIndex].rotation);           //spawns in the player, instantiates the prefab, spawns it at the position from spawnPoints facing a certian direction (rotation)
             
             NetworkServer.Spawn(playerInstance, conn);          //spwans it for the other clients, connection also passed a parameter to show the connection belongs to the player object that is spawned in - the user has authority over it
