@@ -9,6 +9,7 @@ namespace TheCleansing.Lobby
         public static MainMenu instance;
 
         [SerializeField] private NetworkManagerTC networkManager = null;
+        [SerializeField] private string Url;
 
         [Header("UI")]
         [SerializeField] private GameObject landingPagePanel = null;        //ui that turns on and off
@@ -32,6 +33,10 @@ namespace TheCleansing.Lobby
             panelInfoPage.SetActive(false);
         }
 
+        public void Open()
+        {
+            Application.OpenURL(Url);  //opens the website
+        }
 
         public void Exit()
         {
