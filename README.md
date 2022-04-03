@@ -2,7 +2,7 @@
 Welcome to the project.
 This is the repository for the game's code.
 
-The aim of the project is to create a turn-based multiplayer game. This project uses Mirror to support the netowrking of the game.
+The aim of the project is to create a turn-based multiplayer game. This project uses Mirror to support the networking of the game.
 
 https://thecleansing.wixsite.com/team13
 
