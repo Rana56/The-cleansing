@@ -22,6 +22,8 @@ For more details on GitHub desktop and its set up, follow instructions below:
 
 https://www.youtube.com/watch?v=iv8rSLsi1xo&t=146s
 
+https://docs.github.com/en/get-started/quickstart/github-flow
+
 https://docs.github.com/en/desktop/installing-and-configuring-github-desktop/installing-and-authenticating-to-github-desktop/setting-up-github-desktop
 
 ## How to Run the Server?
