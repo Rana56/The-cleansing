@@ -36,8 +36,9 @@ namespace TheCleansing.Lobby                   //a room player stores the user's
             }
             set
             {
+                Debug.Log("start");
                 isLeader = value;
-                startGameButton.gameObject.SetActive(value);            //activates the button if the leader is true
+                //startGameButton.gameObject.SetActive(value);            //activates the button if the leader is true
             }
         }
 
@@ -121,7 +122,7 @@ namespace TheCleansing.Lobby                   //a room player stores the user's
 
         public void HandleReadyToStart(bool readyToStart)              //updates ready status
         {
-            if (!isLeader) { return; }          //method only applicable to leader
+            //if (!isLeader) { return; }          //method only applicable to leader
 
             startGameButton.interactable = readyToStart;            //button only interacatble if all players are ready
         }
@@ -176,7 +177,7 @@ namespace TheCleansing.Lobby                   //a room player stores the user's
         public void CmdStartGame()
         {
             Debug.Log("Start");
-            if (Room.RoomPlayers[0].connectionToClient != connectionToClient) { return; }               //checks if the first person in the room is the leader
+            //if (Room.RoomPlayers[0].connectionToClient != connectionToClient) { return; }               //checks if the first person in the room is the leader
 
             Room.StartGame();
         }

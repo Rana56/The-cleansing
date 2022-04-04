@@ -238,6 +238,11 @@ namespace TheCleansing.Lobby
             }
         }
 
+        public void changeMap()
+        {
+            ServerChangeScene(mapSystem.NextMap);
+        }
+
         public override void ServerChangeScene(string newSceneName)                 //method handles scene change, e.g. going to a game, going out of game
         {
             // From menu to game - newSceneName.StartsWith("Map_")

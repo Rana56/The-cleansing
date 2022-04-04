@@ -72,7 +72,7 @@ namespace TheCleansing.Lobby
         }
 
         [Server]
-        public void Remove(float value)                 //removes health from player
+        public void Remove(float value, GameObject otherPlayer)                 //removes health from player
         {
             value = Mathf.Max(value, 0);
 
@@ -88,7 +88,7 @@ namespace TheCleansing.Lobby
                         Debug.Log(player.connectionToClient.connectionId + " - Player Dead");
                         player.gameObject.GetComponentInChildren<MeshRenderer>().enabled = false;
                     }
-                }*/
+                }
 
                 foreach (NetworkGamePlayer user in Game.GamePlayers)
                 {
@@ -97,8 +97,10 @@ namespace TheCleansing.Lobby
                         user.IncrementScore();
                         break;
                     }
-                }
+                }*/
+                otherPlayer.GetComponent<NetworkGamePlayer>().IncrementScore();
                 resetHealth();
+                Game.changeMap();
                 //RpcHandleDeath();
             }
         }
@@ -107,7 +109,7 @@ namespace TheCleansing.Lobby
         public void AttackPlayer(float value, NetworkGamePlayer player)
         {
             Health otherPlayerHealth = player.GetComponent<Health>();                   //calls server command on other player health 
-            otherPlayerHealth.Remove(value);
+            otherPlayerHealth.Remove(value, gameObject);
         }
 
         [Command]                                                                       //comand called by local player, this command is called on client and run on server
